@@ -73,14 +73,12 @@ func GetPoints(idx int) ([]image.Point, bool, bool) {
 	case 2:
 		return []image.Point{{X: 0, Y: 0}, {X: 0, Y: 0}, {X: 1, Y: 1}, {X: 2, Y: 2}, {X: 3, Y: 1}, {X: 4, Y: 0}}, false, true
 	case 3:
-		return []image.Point{{}}, true, true
-	case 4:
 		return []image.Point{{X: 0, Y: 0}, {X: 10, Y: 0}}, true, true
-	case 5:
+	case 4:
 		return []image.Point{{X: 0, Y: 0}, {X: 11, Y: 1}}, false, true
-	case 6:
-		return []image.Point{{X: 0, Y: 0}, {X: 1, Y: 0}, {X: 3, Y: 0}}, false, true
+	case 5:
+		return []image.Point{{X: 0, Y: 0}, {X: 1, Y: 0}, {X: 4, Y: 0}}, false, true
 	default:
-		return []image.Point{{X: 0, Y: 0}}, true, false
+		return []image.Point{{X: 0, Y: 0}}, false, false
 	}
 }

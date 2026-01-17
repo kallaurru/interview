@@ -6,17 +6,23 @@ import (
 )
 
 func MidLinePoints(data []image.Point) bool {
-	out := true
 	stor, sum := prepareData(data)
+	if len(data) == 1 {
+		return false
+	}
 	for _, p := range data {
 		if p.X == sum/2 {
 			continue // это точка на разделяющей линии
 		}
-		if out == false {
-			break
+		sim := image.Pt(sum-p.X, p.Y)
+		countSim := stor[sim]
+		count := stor[p]
+		if count == countSim {
+			continue
 		}
+		return false
 	}
-	return out
+	return true
 }
 
 func prepareData(data []image.Point) (map[image.Point]int, int) {
@@ -32,7 +38,6 @@ func prepareData(data []image.Point) (map[image.Point]int, int) {
 		}
 		if p.X < minX {
 			minX = p.X
-			continue
 		}
 		if p.X > maxX {
 			maxX = p.X

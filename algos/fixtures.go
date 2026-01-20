@@ -2,7 +2,7 @@ package algos
 
 import "image"
 
-type FixtureNearElements struct {
+type FixtureConfig struct {
 	Data     []int
 	Expected []int
 	Idx      int
@@ -10,11 +10,11 @@ type FixtureNearElements struct {
 	Ok       bool
 }
 
-func GetFixtureNearElements(idx int) *FixtureNearElements {
+func GetFixtureNearElements(idx int) *FixtureConfig {
 	// 3th param == false if not found data for idx
 	switch idx {
 	case 0:
-		return &FixtureNearElements{
+		return &FixtureConfig{
 			Data:     []int{2, 3, 5, 7, 11},
 			Expected: []int{7, 5},
 			Idx:      3,
@@ -22,7 +22,7 @@ func GetFixtureNearElements(idx int) *FixtureNearElements {
 			Ok:       true,
 		}
 	case 1:
-		return &FixtureNearElements{
+		return &FixtureConfig{
 			Data:     []int{4, 12, 15, 15, 24},
 			Expected: []int{12, 15, 15},
 			Idx:      1,
@@ -30,7 +30,7 @@ func GetFixtureNearElements(idx int) *FixtureNearElements {
 			Ok:       true,
 		}
 	case 2:
-		return &FixtureNearElements{
+		return &FixtureConfig{
 			Data:     []int{4, 12, 15, 15, 24},
 			Expected: []int{4, 12},
 			Idx:      0,
@@ -38,7 +38,7 @@ func GetFixtureNearElements(idx int) *FixtureNearElements {
 			Ok:       true,
 		}
 	case 3:
-		return &FixtureNearElements{
+		return &FixtureConfig{
 			Data:     []int{4, 12, 15, 15, 24},
 			Expected: []int{24, 15},
 			Idx:      4,
@@ -46,7 +46,7 @@ func GetFixtureNearElements(idx int) *FixtureNearElements {
 			Ok:       true,
 		}
 	case 4:
-		return &FixtureNearElements{
+		return &FixtureConfig{
 			Data:     []int{4, 12, 15, 15, 24},
 			Expected: []int{},
 			Idx:      2,
@@ -54,7 +54,7 @@ func GetFixtureNearElements(idx int) *FixtureNearElements {
 			Ok:       true,
 		}
 	default:
-		return &FixtureNearElements{
+		return &FixtureConfig{
 			Data:     []int{2, 3, 5, 7, 11},
 			Expected: []int{5, 7},
 			Idx:      2,
@@ -80,5 +80,17 @@ func GetPoints(idx int) ([]image.Point, bool, bool) {
 		return []image.Point{{X: 0, Y: 0}, {X: 1, Y: 0}, {X: 4, Y: 0}}, false, true
 	default:
 		return []image.Point{{X: 0, Y: 0}}, false, false
+	}
+}
+
+func GetKSumFixtures(idx int) *FixtureConfig {
+	switch idx {
+	default:
+		return &FixtureConfig{
+			Data:     []int{11, 3, 7, 3, 2, 9, 3},
+			Expected: []int{2, 4},
+			K:        12,
+			Ok:       false,
+		}
 	}
 }

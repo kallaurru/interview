@@ -2,6 +2,7 @@ package algos
 
 import (
 	"fmt"
+	"github.com/kallaurru/interview/algos/yad/findsumk"
 	"github.com/kallaurru/interview/algos/yad/midlinepoints"
 	"github.com/kallaurru/interview/algos/yad/tnearkfori"
 	"github.com/stretchr/testify/assert"
@@ -32,6 +33,20 @@ func TestMidLinePoints(t *testing.T) {
 		actual := midlinepoints.MidLinePoints(fixture)
 		assert.Equal(t, expect, actual, fmt.Sprintf("Set %d is not equal", idx))
 		if !ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestFindSumK(t *testing.T) {
+	idx := 0
+	for {
+		fixture := GetKSumFixtures(idx)
+		aS, aE := findsumk.SumKInArr(fixture.Data, fixture.K)
+		assert.Equal(t, fixture.Expected[0], aS, "started value not equal")
+		assert.Equal(t, fixture.Expected[1], aE, "ended value not equal")
+		if !fixture.Ok {
 			break
 		}
 		idx++

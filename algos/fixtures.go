@@ -2,14 +2,6 @@ package algos
 
 import "image"
 
-type FixtureConfig struct {
-	Data     []int
-	Expected []int
-	Idx      int
-	K        int
-	Ok       bool
-}
-
 func GetFixtureNearElements(idx int) *FixtureConfig {
 	// 3th param == false if not found data for idx
 	switch idx {

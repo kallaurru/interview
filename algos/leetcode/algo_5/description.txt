@@ -28,6 +28,21 @@ Example 5:
 Input: s = "baddac"
 Output: "adda"
 
+Example 6:
+
+Input: s = "bb"
+Output: "bb"
+
+Example 7:
+
+Input: s = "Abdjscc"
+Output: "cc"
+
+Example 8:
+
+Input: s = "aba"
+Output: "aba"
+
 
 Constraints:
 

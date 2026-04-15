@@ -21,7 +21,7 @@ func TestBinSearchAlgo_704(t *testing.T) {
 }
 
 func TestLeetCodeProblem5(t *testing.T) {
-	i := 0
+	i := 8
 	for {
 		item := GetFixturesAlgo5(i)
 		actual := algo_5.MaxPalindromeAlgo5(item.Input)

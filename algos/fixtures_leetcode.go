@@ -25,8 +25,8 @@ func GetFixturesAlgo5(idx int) *StringFixture {
 	switch idx {
 	default:
 		return &StringFixture{
-			Input:  "babad",
-			Output: "bab",
+			Input:  "193867",
+			Output: "",
 			Ok:     false,
 		}
 	case 0:
@@ -52,6 +52,30 @@ func GetFixturesAlgo5(idx int) *StringFixture {
 			Input:  "baddac",
 			Output: "adda",
 			Ok:     true,
+		}
+	case 4:
+		return &StringFixture{
+			Input:  "bb",
+			Output: "bb",
+			Ok:     true,
+		}
+	case 5:
+		return &StringFixture{
+			Input:  "Abdjscc",
+			Output: "cc",
+			Ok:     true,
+		}
+	case 6:
+		return &StringFixture{
+			Input:  "aba",
+			Output: "aba",
+			Ok:     true,
+		}
+	case 7:
+		return &StringFixture{
+			Input:  "babad",
+			Output: "bab",
+			Ok:     false,
 		}
 	}
 }

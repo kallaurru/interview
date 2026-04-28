@@ -79,3 +79,25 @@ func GetFixturesAlgo5(idx int) *StringFixture {
 		}
 	}
 }
+
+func GetFixturesAlgo228(idx int) ([]int, []string, bool) {
+	switch idx {
+	default:
+		return []int{0, 1, 2, 4, 5, 7}, []string{"0->2", "4->5", "7"}, false
+	case 0:
+		return []int{0, 2, 3, 4, 6, 8, 9}, []string{"0", "2->4", "6", "8->9"}, true
+	}
+}
+
+func GetFixtureAlgo125(idx int) (string, bool, bool) {
+	switch idx {
+	default:
+		return "A man, a plan, a canal: Panama", true, false
+	case 0:
+		return "race a car", false, true
+	case 1:
+		return "race aa ecar", true, true
+	case 2:
+		return "abba", true, true
+	}
+}

@@ -1,6 +1,9 @@
 package algos
 
 import (
+	"fmt"
+	"github.com/kallaurru/interview/algos/leetcode/algo_125"
+	"github.com/kallaurru/interview/algos/leetcode/algo_228"
 	"github.com/kallaurru/interview/algos/leetcode/algo_5"
 	"github.com/kallaurru/interview/algos/leetcode/algo_704"
 	"github.com/stretchr/testify/assert"
@@ -28,6 +31,34 @@ func TestLeetCodeProblem5(t *testing.T) {
 		assert.Equal(t, item.Output, actual)
 		i++
 		if !item.Ok {
+			break
+		}
+	}
+}
+
+func TestLeetCodeProblem228(t *testing.T) {
+	i := 0
+	for {
+		in, expect, ok := GetFixturesAlgo228(i)
+		actual := algo_228.SummaryRanges(in)
+		assert.Equal(t, len(expect), len(actual), "lens of arrays not equal")
+		assert.Equal(t, expect, actual)
+		i++
+		if !ok {
+			break
+		}
+	}
+	fmt.Printf("Count - %d\n", i)
+}
+
+func TestLeetCodeProblem125(t *testing.T) {
+	i := 0
+	for {
+		in, expect, ok := GetFixtureAlgo125(i)
+		actual := algo_125.ValidPalindrome(in)
+		assert.Equal(t, expect, actual, "not equal. case - ", i)
+		i++
+		if !ok {
 			break
 		}
 	}

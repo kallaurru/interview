@@ -101,3 +101,62 @@ func GetFixtureAlgo125(idx int) (string, bool, bool) {
 		return "abba", true, true
 	}
 }
+
+func GetFixtureAlgo283(idx int) ([]int, []int, bool) {
+	switch idx {
+	default:
+		return []int{0, 1, 0, 3, 12}, []int{1, 3, 12, 0, 0}, false
+	case 0:
+		return []int{0}, []int{0}, true
+	case 1:
+		return []int{0, 1, 0, 3, 12, 0}, []int{1, 3, 12, 0, 0, 0}, true
+	case 2:
+		return []int{1, 2, 3, 12, 0, 20}, []int{1, 2, 3, 12, 20, 0}, true
+	}
+}
+
+func GetFixtureAlgo206(idx int) ([]int, []int, bool) {
+	switch idx {
+	default:
+		return []int{1, 2, 3, 4, 5}, []int{5, 4, 3, 2, 1}, false
+	case 0:
+		return []int{1, 2}, []int{2, 1}, true
+	case 1:
+		return []int{}, []int{}, true
+	}
+}
+
+func GetFixturesAlgo1(idx int) *FixtureConfig {
+	switch idx {
+	default:
+		return &FixtureConfig{
+			Data:     []int{2, 7, 11, 15},
+			Expected: []int{0, 1},
+			K:        9,
+			Ok:       false,
+		}
+	case 0:
+		return &FixtureConfig{
+			Data:     []int{3, 2, 4},
+			Expected: []int{1, 2},
+			K:        6,
+			Ok:       true,
+		}
+	case 1:
+		return &FixtureConfig{
+			Data:     []int{3, 3},
+			Expected: []int{0, 1},
+			K:        6,
+			Ok:       true,
+		}
+		// сам придумал, т.к. не понял из условия числа всегда рядом стоят
+		// или это просто сумма 2-ух чисел
+	case 2:
+		return &FixtureConfig{
+			Data:     []int{3, 3, 1, 9},
+			Expected: []int{0, 1},
+			K:        6,
+			Ok:       true,
+		}
+	}
+}

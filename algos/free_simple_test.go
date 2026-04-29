@@ -22,3 +22,16 @@ func TestTransformIdxVectorToMatrix(t *testing.T) {
 		fmt.Printf("Idx - %d, Val - %d, Row - %d, Col - %d\n", idx, val, r, c)
 	}
 }
+
+func TestBytesManipulate(t *testing.T) {
+	var s uint32 = 0x01
+
+	a := s
+	fmt.Printf("Step 1. a - %d, s - %d\n", a, s)
+
+	a ^= s
+	fmt.Printf("Step 2. a - %d, after ^= byte op\n", a)
+
+	a ^= s
+	fmt.Printf("Step 3. a - %d, after ^= byte op\n", a)
+}

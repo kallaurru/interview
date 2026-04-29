@@ -2,8 +2,11 @@ package algos
 
 import (
 	"fmt"
+	"github.com/kallaurru/interview/algos/leetcode/algo_1"
 	"github.com/kallaurru/interview/algos/leetcode/algo_125"
+	"github.com/kallaurru/interview/algos/leetcode/algo_206"
 	"github.com/kallaurru/interview/algos/leetcode/algo_228"
+	"github.com/kallaurru/interview/algos/leetcode/algo_283"
 	"github.com/kallaurru/interview/algos/leetcode/algo_5"
 	"github.com/kallaurru/interview/algos/leetcode/algo_704"
 	"github.com/stretchr/testify/assert"
@@ -59,6 +62,49 @@ func TestLeetCodeProblem125(t *testing.T) {
 		assert.Equal(t, expect, actual, "not equal. case - ", i)
 		i++
 		if !ok {
+			break
+		}
+	}
+}
+
+func TestLeetCodeProblem283(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo283(idx)
+		actual := algo_283.MoveZero(in)
+		assert.Equal(t, expect, actual, "arrays not equal")
+		idx++
+		if !ok {
+			break
+		}
+	}
+}
+
+func TestLeetCodeProblem206(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo206(idx)
+		actual := algo_206.ReverseListRecursive(in, 0, len(in)-1)
+		assert.Equal(t, expect, actual, "arrays not equal. Case recursive")
+
+		in, expect, ok = GetFixtureAlgo206(idx)
+		actual = algo_206.ReverseListIteration(in)
+		assert.Equal(t, expect, actual, "arrays not equal. Case interation")
+		idx++
+		if !ok {
+			break
+		}
+	}
+}
+
+func TestLeetCodeProblem1(t *testing.T) {
+	idx := 0
+	for {
+		fixt := GetFixturesAlgo1(idx)
+		actual := algo_1.TwoSum(fixt.Data, fixt.K)
+		assert.Equal(t, fixt.Expected, actual, "arrays not equal")
+		idx++
+		if !fixt.Ok {
 			break
 		}
 	}

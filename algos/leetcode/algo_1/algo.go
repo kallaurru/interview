@@ -1,20 +1,21 @@
 package algo_1
 
-func TwoSum(in []int, target int) []int {
+// TwoSumNear Исходя из представленных тест кейсов ищем сумму 2 ух чисел рядом
+func TwoSumNear(in []int, target int) []int {
 	if len(in) < 2 {
 		return []int{}
 	}
 	ws := 2
-	r, l := in[0], in[1]
-	sum := r + l
+	sum := in[0] + in[1]
 	if sum == target {
 		return []int{0, 1}
 	}
-	for i := 2; i < len(in); i++ {
-		sum += in[i] - in[i-ws]
+	for l := 2; l < len(in); l++ {
+		sum += in[l] - in[l-ws]
 		if sum == target {
-			return []int{}
+			return []int{l - 1, l}
 		}
 	}
+
 	return nil
 }

@@ -3,7 +3,9 @@ package algos
 import (
 	"fmt"
 	"github.com/kallaurru/interview/algos/leetcode/algo_1"
+	"github.com/kallaurru/interview/algos/leetcode/algo_101"
 	"github.com/kallaurru/interview/algos/leetcode/algo_125"
+	"github.com/kallaurru/interview/algos/leetcode/algo_1446"
 	"github.com/kallaurru/interview/algos/leetcode/algo_206"
 	"github.com/kallaurru/interview/algos/leetcode/algo_228"
 	"github.com/kallaurru/interview/algos/leetcode/algo_283"
@@ -101,10 +103,42 @@ func TestLeetCodeProblem1(t *testing.T) {
 	idx := 0
 	for {
 		fixt := GetFixturesAlgo1(idx)
-		actual := algo_1.TwoSum(fixt.Data, fixt.K)
+		actual := algo_1.TwoSumNear(fixt.Data, fixt.K)
 		assert.Equal(t, fixt.Expected, actual, "arrays not equal")
 		idx++
 		if !fixt.Ok {
+			break
+		}
+	}
+}
+
+func TestLeetCodeProblem101(t *testing.T) {
+	idx := 0
+	mv := algo_101.ConstMissVal
+	for {
+		in, expect, ok := GetFixtureAlgo101(idx, mv)
+		actual := algo_101.SymmetricTreeR(in, mv)
+		assert.Equal(t, expect, actual, "tree no symmetric")
+
+		in, expect, ok = GetFixtureAlgo101(idx, mv)
+		actual = algo_101.SymmetricTreeI(in, mv)
+		assert.Equal(t, expect, actual, "tree is symmetric")
+		idx++
+		if !ok {
+			break
+		}
+	}
+}
+
+func TestLeetCodeProblem1446(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo1446(idx)
+		actual := algo_1446.ConsecutiveChar(in)
+		assert.Equal(t, expect, actual, "not equal")
+
+		idx++
+		if !ok {
 			break
 		}
 	}

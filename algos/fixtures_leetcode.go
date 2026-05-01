@@ -149,14 +149,25 @@ func GetFixturesAlgo1(idx int) *FixtureConfig {
 			K:        6,
 			Ok:       true,
 		}
-		// сам придумал, т.к. не понял из условия числа всегда рядом стоят
-		// или это просто сумма 2-ух чисел
-	case 2:
-		return &FixtureConfig{
-			Data:     []int{3, 3, 1, 9},
-			Expected: []int{0, 1},
-			K:        6,
-			Ok:       true,
-		}
+	}
+}
+
+// GetFixtureAlgo101 По условиям задачи макс значение от -100 до 100.
+// Значит пропущенные значения обозначаем как
+func GetFixtureAlgo101(idx int, missVal int) ([]int, bool, bool) {
+	switch idx {
+	default:
+		return []int{1, 2, 2, 3, 4, 4, 3}, true, false
+	case 0:
+		return []int{1, 2, 2, missVal, 3, missVal, 3}, false, true
+	}
+}
+
+func GetFixtureAlgo1446(idx int) (string, int, bool) {
+	switch idx {
+	default:
+		return "leetcode", 2, false
+	case 0:
+		return "abbcccddddeeeeedcba", 5, true
 	}
 }

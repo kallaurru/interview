@@ -1,7 +1,8 @@
-package algos
+package polygon
 
 import (
 	"fmt"
+	"log"
 	"testing"
 )
 
@@ -34,4 +35,14 @@ func TestBytesManipulate(t *testing.T) {
 
 	a ^= s
 	fmt.Printf("Step 3. a - %d, after ^= byte op\n", a)
+}
+
+func TestByteDiffs(t *testing.T) {
+	var line = 0
+	var result uint32 = 0
+	for line = 0; line < 16; line++ {
+		result = 1 << line
+	}
+
+	log.Println("Result is - ", result)
 }

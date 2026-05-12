@@ -117,12 +117,12 @@ func TestLeetCodeProblem101(t *testing.T) {
 	mv := algo_101.ConstMissVal
 	for {
 		in, expect, ok := GetFixtureAlgo101(idx, mv)
-		actual := algo_101.SymmetricTreeR(in, mv)
-		assert.Equal(t, expect, actual, "tree no symmetric")
+		actual := algo_101.SymmetricTreeI(in, mv)
+		assert.Equal(t, expect, actual, "tree error I")
 
 		in, expect, ok = GetFixtureAlgo101(idx, mv)
-		actual = algo_101.SymmetricTreeI(in, mv)
-		assert.Equal(t, expect, actual, "tree is symmetric")
+		actual = algo_101.SymmetricTreeR(in, mv)
+		assert.Equal(t, expect, actual, "tree error R")
 		idx++
 		if !ok {
 			break

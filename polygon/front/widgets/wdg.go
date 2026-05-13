@@ -10,24 +10,29 @@ const (
 	ConstTypeTab   uint8 = 0x01
 	ConstTypeList  uint8 = 0x02
 	ConstTypeGauge uint8 = 0x04
-	ConstTypeModal uint8 = 0x08
+	ConstTypeGrid  uint8 = 0x08
+
+	ConstWindowTypeDef   uint8 = 0x00
+	ConstWindowTypeModal uint8 = 0x01
 )
 
 type Wdg struct {
-	Active   bool
-	Type     uint8
-	Id       int
-	Value    int
-	onSelect talk.Selectable
+	Active     bool
+	Type       uint8
+	WindowType uint8
+	Id         int
+	Value      int
+	onSelect   talk.Selectable
 }
 
 func New(id int, t uint8) *Wdg {
 	return &Wdg{
-		Active:   false,
-		Type:     t,
-		Id:       id,
-		Value:    0,
-		onSelect: nil,
+		Active:     false,
+		Type:       t,
+		WindowType: ConstWindowTypeDef,
+		Id:         id,
+		Value:      0,
+		onSelect:   nil,
 	}
 }
 
@@ -42,6 +47,7 @@ func (wdg *Wdg) CanSelect() {
 func (wdg *Wdg) OnActivate(active bool) {
 	wdg.Active = active
 }
+
 func (wdg *Wdg) String() string {
 	return fmt.Sprintf(
 		"Active: %v, Type: %d, Id: %d, Value: %d\n",

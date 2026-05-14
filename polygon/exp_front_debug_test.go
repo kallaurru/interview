@@ -61,7 +61,7 @@ func fixturesWdg() []*w.Wdg {
 }
 
 func fixtureKeys() []uint32 {
-	out := []uint32{
+	return []uint32{
 		constKeyTab,
 		constKeyTab,
 		constKeyTab,

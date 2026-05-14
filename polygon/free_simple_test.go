@@ -2,6 +2,7 @@ package polygon
 
 import (
 	"fmt"
+	"github.com/kallaurru/interview/algos/leetcode/algo_232"
 	"log"
 	"testing"
 )
@@ -45,4 +46,15 @@ func TestByteDiffs(t *testing.T) {
 	}
 
 	log.Println("Result is - ", result)
+}
+
+func TestMyStackForAlgo(t *testing.T) {
+	stack := algo_232.NewStack()
+	for i := 8; i < 16; i++ {
+		stack.Push(i)
+	}
+	fmt.Printf("Size of stack: %d\n", stack.Size())
+	for !stack.IsEmpty() {
+		fmt.Printf("Val : %d | Size : %d\n", stack.Pop(), stack.Size())
+	}
 }

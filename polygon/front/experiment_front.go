@@ -3,6 +3,7 @@ package front
 import (
 	"context"
 	"fmt"
+	glg "github.com/bahlo/generic-list-go"
 	t "github.com/kallaurru/interview/polygon/front/talk"
 	w "github.com/kallaurru/interview/polygon/front/widgets"
 	"sync/atomic"
@@ -19,6 +20,7 @@ type OnActionKbd func(ef *EFront, kb uint32)
 type EFront struct {
 	grid      *w.Wdg
 	widgets   []*w.Wdg // 0 - nil, 1 - 9 виджеты или nil если их меньше, > 9 модалки
+	queue     *glg.List[int]
 	onDash    OnActionF
 	onKbClick OnActionKbd // дает возможность подключать к кнопкам действия
 	focus     atomic.Uint32
@@ -43,6 +45,7 @@ const (
 
 func New(wdg []*w.Wdg) *EFront {
 	f := &EFront{
+		queue:     glg.New[int](),
 		widgets:   wdg,
 		onDash:    OnDash,
 		onKbClick: PlugActionsKbd,

@@ -171,3 +171,53 @@ func GetFixtureAlgo1446(idx int) (string, int, bool) {
 		return "abbcccddddeeeeedcba", 5, true
 	}
 }
+
+func GetFixturesAlgo88(idx int) PaarFixture {
+	switch idx {
+	default:
+		return PaarFixture{
+			Ok:       false,
+			Left:     []int{1, 2, 3, 0, 0, 0},
+			Right:    []int{2, 5, 6},
+			Expected: []int{1, 2, 2, 3, 5, 6},
+			M:        3,
+			N:        3,
+		}
+	case 0:
+		return PaarFixture{
+			Ok:       true,
+			Left:     []int{1},
+			Right:    []int{},
+			Expected: []int{1},
+			M:        1,
+			N:        0,
+		}
+	case 1:
+		return PaarFixture{
+			Ok:       true,
+			Left:     []int{0},
+			Right:    []int{1},
+			Expected: []int{1},
+			M:        0,
+			N:        1,
+		}
+	case 2:
+		return PaarFixture{
+			Ok:       true,
+			Left:     []int{1, 2, 5, 0, 0, 0},
+			Right:    []int{2, 5, 6},
+			Expected: []int{1, 2, 2, 5, 5, 6},
+			M:        3,
+			N:        3,
+		}
+	case 3:
+		return PaarFixture{
+			Ok:       true,
+			Left:     []int{4, 5, 8, 0, 0, 0},
+			Right:    []int{2, 5, 6},
+			Expected: []int{2, 4, 5, 5, 6, 8},
+			M:        3,
+			N:        3,
+		}
+	}
+}

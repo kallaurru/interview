@@ -13,3 +13,12 @@ type StringFixture struct {
 	Output string
 	Ok     bool
 }
+
+type PaarFixture struct {
+	Ok       bool
+	Left     []int
+	Right    []int
+	Expected []int // size m+n
+	M        int
+	N        int
+}

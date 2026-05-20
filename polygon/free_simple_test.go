@@ -3,9 +3,28 @@ package polygon
 import (
 	"fmt"
 	"github.com/kallaurru/interview/algos/leetcode/algo_232"
+	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
 )
+
+func TestMyStack(t *testing.T) {
+	stack := algo_232.NewStack()
+	in := []int{2, 3, 6, 8, 9, 12}
+	for _, val := range in {
+		stack.Push(val)
+	}
+	for i := len(in) - 1; i >= 0; i-- {
+		expected := in[i]
+		actual := stack.Peek()
+		assert.Equal(t, expected, actual, "Values not equal")
+		if !stack.IsEmpty() {
+			actual = stack.Pop()
+			assert.Equal(t, expected, actual, "Values not equal")
+		}
+	}
+	assert.Equal(t, true, stack.IsEmpty(), "stack is not empty")
+}
 
 func TestTransformIdxVectorToMatrix(t *testing.T) {
 	tr := func(idx, cols int) (int, int) {

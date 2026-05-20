@@ -8,9 +8,11 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_1446"
 	"github.com/kallaurru/interview/algos/leetcode/algo_206"
 	"github.com/kallaurru/interview/algos/leetcode/algo_228"
+	"github.com/kallaurru/interview/algos/leetcode/algo_232"
 	"github.com/kallaurru/interview/algos/leetcode/algo_283"
 	"github.com/kallaurru/interview/algos/leetcode/algo_5"
 	"github.com/kallaurru/interview/algos/leetcode/algo_704"
+	"github.com/kallaurru/interview/algos/leetcode/algo_88"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -139,6 +141,32 @@ func TestLeetCodeProblem1446(t *testing.T) {
 
 		idx++
 		if !ok {
+			break
+		}
+	}
+}
+
+func TestLeetCodeProblem232(t *testing.T) {
+	q := algo_232.New()
+	q.Push(1)
+	q.Push(2)
+	expected := 1
+	actual := q.Peek()
+	assert.Equal(t, expected, actual, "values not equal")
+	actual = q.Pop()
+	assert.Equal(t, expected, actual, "values not equal")
+	assert.Equal(t, false, q.Empty(), "queue is empty")
+}
+
+func TestLeetCodeProblem88(t *testing.T) {
+	idx := 0
+	for {
+		data := GetFixturesAlgo88(idx)
+		algo_88.MergeArraysAlgo88(data.Left, data.Right, data.M, data.N)
+		assert.Equal(t, data.Expected, data.Left, "arrays not equal")
+
+		idx++
+		if !data.Ok {
 			break
 		}
 	}

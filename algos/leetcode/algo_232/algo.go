@@ -13,21 +13,21 @@ func New() *MyQueue {
 }
 
 func (mq *MyQueue) Push(x int) {
-	masterSize := 8
-	// проблема при добавлении после 8 элементов
 	if mq.s1.IsEmpty() {
 		mq.s1.Push(x)
 		return
 	}
-	if mq.s1.Size() == masterSize {
-		mq.s2.Push(x)
-		return
-	}
-	// нужно переложить
+	mq.s2.Push(x)
 }
 
 func (mq *MyQueue) Pop() int {
-	return mq.s1.Pop()
+	val := mq.s1.Pop()
+	if mq.s2.IsEmpty() {
+		return val
+	}
+	mq.rearrange()
+
+	return val
 }
 
 func (mq MyQueue) Peek() int {
@@ -38,13 +38,14 @@ func (mq *MyQueue) Empty() bool {
 	return mq.s1.IsEmpty()
 }
 
-func (mq *MyQueue) rearrange(val int) {
-	tmp := make([]int, 0, mq.s1.Size())
-	for !mq.s1.IsEmpty() {
-		tmp = append(tmp, mq.s1.Pop())
+func (mq *MyQueue) rearrange() {
+	tmp := make([]int, 0, mq.s2.Size())
+	for !mq.s2.IsEmpty() {
+		tmp = append(tmp, mq.s2.Pop())
 	}
-	mq.s1.Push(val)
-	for i := len(tmp) - 1; i >= 0; i-- {
-		mq.s1.Push(tmp[i])
+	mq.s1.Push(tmp[len(tmp)-1])
+	tmp = tmp[0 : len(tmp)-1]
+	for _, val := range tmp {
+		mq.s2.Push(val)
 	}
 }

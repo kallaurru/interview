@@ -7,11 +7,15 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_125"
 	"github.com/kallaurru/interview/algos/leetcode/algo_1446"
 	"github.com/kallaurru/interview/algos/leetcode/algo_206"
+	"github.com/kallaurru/interview/algos/leetcode/algo_21"
 	"github.com/kallaurru/interview/algos/leetcode/algo_228"
 	"github.com/kallaurru/interview/algos/leetcode/algo_232"
+	"github.com/kallaurru/interview/algos/leetcode/algo_268"
 	"github.com/kallaurru/interview/algos/leetcode/algo_283"
+	"github.com/kallaurru/interview/algos/leetcode/algo_350"
 	"github.com/kallaurru/interview/algos/leetcode/algo_5"
 	"github.com/kallaurru/interview/algos/leetcode/algo_704"
+	"github.com/kallaurru/interview/algos/leetcode/algo_771"
 	"github.com/kallaurru/interview/algos/leetcode/algo_88"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -169,5 +173,67 @@ func TestLeetCodeProblem88(t *testing.T) {
 		if !data.Ok {
 			break
 		}
+	}
+}
+
+func TestLeetCodeProblem21(t *testing.T) {
+	idx := 0
+	for {
+		data := GetFixtureAlgo21(idx)
+		l1 := algo_21.BuildList(data.Left)
+		l2 := algo_21.BuildList(data.Right)
+		actual := algo_21.MergeTwoListAlgo21(l1, l2)
+		i := 0
+		for actual != nil {
+			assert.Equal(t, data.Expected[i], actual.Val, "values not equal")
+			i++
+			actual = actual.Next
+		}
+		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem771(t *testing.T) {
+	idx := 0
+	for {
+		data, expected := GetFixturesAlgo771(idx)
+		actual := algo_771.NumJewelsInStonesAlgo771(data.Input, data.Output)
+		assert.Equal(t, expected, actual)
+
+		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem350(t *testing.T) {
+	idx := 0
+	for {
+		data := GetFixturesAlgo350(idx)
+		actual := algo_350.IntersectionTwoArraysAlgo350(data.Left, data.Right)
+		assert.Equal(t, data.Expected, actual, "values not equal")
+
+		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem268(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo228(idx)
+		actual := algo_268.MissingNumberAlgo268(in)
+		assert.Equal(t, expect, actual, "numbers not equal")
+
+		if !ok {
+			break
+		}
+		idx++
 	}
 }

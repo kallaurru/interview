@@ -22,7 +22,7 @@ type EFront struct {
 	widgets   []*w.Wdg // 0 - nil, 1 - 9 виджеты или nil если их меньше, > 9 модалки
 	queue     *glg.List[int]
 	onDash    OnActionF
-	onKbClick OnActionKbd // дает возможность подключать к кнопкам действия
+	onKbClick OnActionKbd // Вариативность действий кнопок
 	focus     atomic.Uint32
 	editable  atomic.Bool
 }

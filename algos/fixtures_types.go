@@ -22,3 +22,12 @@ type PaarFixture struct {
 	M        int
 	N        int
 }
+
+type TreeFixture struct {
+	Ok     bool
+	Raw    []int
+	L      int
+	H      int
+	Expect int
+	MV     int
+}

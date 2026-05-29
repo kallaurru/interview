@@ -301,3 +301,74 @@ func GetFixtureAlgo228(idx int) ([]int, int, bool) {
 		return []int{9, 6, 4, 2, 3, 5, 7, 0, 1}, 8, true
 	}
 }
+
+func GetFixtureAlgo392(idx int) (StringFixture, bool) {
+	switch idx {
+	default:
+		return StringFixture{
+			Input:  "abc",
+			Output: "ahbgdc",
+			Ok:     false,
+		}, true
+	case 0:
+		return StringFixture{
+			Input:  "axc",
+			Output: "ahbgdc",
+			Ok:     true,
+		}, false
+	case 1:
+		return StringFixture{
+			Input:  "ace",
+			Output: "abcde",
+			Ok:     true,
+		}, true
+	case 2:
+		return StringFixture{
+			Input:  "aec",
+			Output: "abcde",
+			Ok:     true,
+		}, false
+	}
+}
+
+func GetFixtureAlgo977(idx int) ([]int, []int, bool) {
+	switch idx {
+	default:
+		return []int{-4, -1, 0, 3, 10}, []int{0, 1, 9, 16, 100}, false
+	case 0:
+		return []int{-7, -3, 2, 3, 11}, []int{4, 9, 9, 49, 121}, true
+	}
+}
+
+func GetFixtureAlgo26(idx int) ([]int, int, bool) {
+	switch idx {
+	default:
+		return []int{1, 1, 2}, 2, false
+	case 0:
+		return []int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}, 5, true
+	}
+}
+
+func GetFixtureAlgo938(idx int) TreeFixture {
+	mv := -1
+	switch idx {
+	default:
+		return TreeFixture{
+			Ok:     false,
+			MV:     mv,
+			Raw:    []int{10, 5, 15, 3, 7, mv, 18},
+			L:      7,
+			H:      15,
+			Expect: 32,
+		}
+	case 0:
+		return TreeFixture{
+			Ok:     true,
+			MV:     mv,
+			Raw:    []int{10, 5, 15, 3, 7, 13, 18, 1, mv, 6, mv, mv, mv, mv, mv},
+			L:      6,
+			H:      10,
+			Expect: 23,
+		}
+	}
+}

@@ -10,13 +10,17 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_21"
 	"github.com/kallaurru/interview/algos/leetcode/algo_228"
 	"github.com/kallaurru/interview/algos/leetcode/algo_232"
+	"github.com/kallaurru/interview/algos/leetcode/algo_26"
 	"github.com/kallaurru/interview/algos/leetcode/algo_268"
 	"github.com/kallaurru/interview/algos/leetcode/algo_283"
 	"github.com/kallaurru/interview/algos/leetcode/algo_350"
+	"github.com/kallaurru/interview/algos/leetcode/algo_392"
 	"github.com/kallaurru/interview/algos/leetcode/algo_5"
 	"github.com/kallaurru/interview/algos/leetcode/algo_704"
 	"github.com/kallaurru/interview/algos/leetcode/algo_771"
 	"github.com/kallaurru/interview/algos/leetcode/algo_88"
+	"github.com/kallaurru/interview/algos/leetcode/algo_938"
+	"github.com/kallaurru/interview/algos/leetcode/algo_977"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -232,6 +236,60 @@ func TestLeetCodeProblem268(t *testing.T) {
 		assert.Equal(t, expect, actual, "numbers not equal")
 
 		if !ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem392(t *testing.T) {
+	idx := 0
+	for {
+		data, expected := GetFixtureAlgo392(idx)
+		actual := algo_392.IsSubsequenceAlgo392(data.Input, data.Output)
+		assert.Equal(t, expected, actual, "not equal values", "idx - ", idx)
+		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem977(t *testing.T) {
+	idx := 0
+	for {
+		in, expected, ok := GetFixtureAlgo977(idx)
+		actual := algo_977.SquaresOfSortedArrays977(in)
+		assert.Equal(t, expected, actual, "not equal values", "idx - ", idx)
+		if !ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem26(t *testing.T) {
+	idx := 0
+	for {
+		in, expected, ok := GetFixtureAlgo26(idx)
+		actual := algo_26.RemoveDuplicateSortedArray26(in)
+		assert.Equal(t, expected, actual, "not equal values", "idx - ", idx)
+		if !ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem938(t *testing.T) {
+	idx := 0
+	for {
+		data := GetFixtureAlgo938(idx)
+		tree := algo_938.BuildTree(data.Raw, data.MV)
+		actual := algo_938.RangeSumBST938(tree, data.L, data.H)
+		assert.Equal(t, data.Expect, actual, "values is not equal")
+
+		if !data.Ok {
 			break
 		}
 		idx++

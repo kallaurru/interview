@@ -372,3 +372,60 @@ func GetFixtureAlgo938(idx int) TreeFixture {
 		}
 	}
 }
+
+func GetFixtureAlgo557(idx int) (string, string, bool) {
+	switch idx {
+	default:
+		return "Let's take LeetCode contest", "s'teL ekat edoCteeL tsetnoc", false
+	case 0:
+		return "Mr Ding", "rM gniD", true
+	}
+}
+
+func GetFixtureAlgo415(idx int) StringFixtureAdv {
+	switch idx {
+	default:
+		return StringFixtureAdv{
+			L:      "11",
+			R:      "123",
+			Expect: "134",
+			Ok:     false,
+		}
+	case 0:
+		return StringFixtureAdv{
+			L:      "456",
+			R:      "77",
+			Expect: "533",
+			Ok:     true,
+		}
+	case 1:
+		return StringFixtureAdv{
+			L:      "0",
+			R:      "0",
+			Expect: "0",
+			Ok:     true,
+		}
+	}
+}
+
+func GetFixtureAlgo234(idx int) ([]int, bool, bool) {
+	switch idx {
+	default:
+		return []int{1, 2, 2, 1}, true, false
+	case 0:
+		return []int{1, 2}, false, true
+	case 1:
+		return []int{1, 2, 3, 2, 1}, true, true
+	}
+}
+
+func GetFixtureAlgo387(idx int) (string, int, bool) {
+	switch idx {
+	default:
+		return "leetcode", 0, false
+	case 0:
+		return "loveleetcode", 2, true
+	case 1:
+		return "aabb", -1, true
+	}
+}

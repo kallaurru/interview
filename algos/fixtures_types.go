@@ -8,6 +8,13 @@ type FixtureConfig struct {
 	Ok       bool
 }
 
+type StringFixtureAdv struct {
+	L      string
+	R      string
+	Expect string
+	Ok     bool
+}
+
 type StringFixture struct {
 	Input  string
 	Output string

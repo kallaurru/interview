@@ -10,12 +10,16 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_21"
 	"github.com/kallaurru/interview/algos/leetcode/algo_228"
 	"github.com/kallaurru/interview/algos/leetcode/algo_232"
+	"github.com/kallaurru/interview/algos/leetcode/algo_234"
 	"github.com/kallaurru/interview/algos/leetcode/algo_26"
 	"github.com/kallaurru/interview/algos/leetcode/algo_268"
 	"github.com/kallaurru/interview/algos/leetcode/algo_283"
 	"github.com/kallaurru/interview/algos/leetcode/algo_350"
+	"github.com/kallaurru/interview/algos/leetcode/algo_387"
 	"github.com/kallaurru/interview/algos/leetcode/algo_392"
+	"github.com/kallaurru/interview/algos/leetcode/algo_415"
 	"github.com/kallaurru/interview/algos/leetcode/algo_5"
+	"github.com/kallaurru/interview/algos/leetcode/algo_557"
 	"github.com/kallaurru/interview/algos/leetcode/algo_704"
 	"github.com/kallaurru/interview/algos/leetcode/algo_771"
 	"github.com/kallaurru/interview/algos/leetcode/algo_88"
@@ -290,6 +294,64 @@ func TestLeetCodeProblem938(t *testing.T) {
 		assert.Equal(t, data.Expect, actual, "values is not equal")
 
 		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem557(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo557(idx)
+		actual := algo_557.ReverseWordAlgo557(in)
+		assert.Equal(t, expect, actual, "values not equal")
+
+		if !ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem415(t *testing.T) {
+	idx := 0
+	for {
+		data := GetFixtureAlgo415(idx)
+
+		actual := algo_415.AddStringsAlgo415(data.L, data.R)
+		assert.Equal(t, data.Expect, actual, "values not equal")
+
+		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem234(t *testing.T) {
+	idx := 0
+	for {
+		raw, expect, ok := GetFixtureAlgo234(idx)
+		head := algo_234.BuildList(raw)
+		actual := algo_234.IsPalindromeAlgo234(head)
+		assert.Equal(t, expect, actual, "values not equal")
+
+		if !ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem387(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo387(idx)
+		actual := algo_387.FirstUniqueChrAlgo387(in)
+		assert.Equal(t, expect, actual, "values not equal")
+
+		if !ok {
 			break
 		}
 		idx++

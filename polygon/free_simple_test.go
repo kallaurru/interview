@@ -3,6 +3,7 @@ package polygon
 import (
 	"fmt"
 	"github.com/kallaurru/interview/algos/leetcode/algo_232"
+	"github.com/kallaurru/interview/polygon/sort"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
@@ -76,4 +77,12 @@ func TestMyStackForAlgo(t *testing.T) {
 	for !stack.IsEmpty() {
 		fmt.Printf("Val : %d | Size : %d\n", stack.Pop(), stack.Size())
 	}
+}
+
+func TestQuickSort(t *testing.T) {
+	arr := []int{1493, 443, 560, 356, 281, 161, 49, 380, 146, 22, 567, 933, 20, 487, 849, 362, 56, 253, 438, 470, 3, 98, 200, 341,
+		986, 2, 1004, 5, 236, 150, 71, 19, 279, 1650, 159, 33, 167, 153, 763, 238, 523}
+	fmt.Println("Before:", arr)
+	sorted := sort.QuickSort(arr)
+	fmt.Println("After:", sorted)
 }

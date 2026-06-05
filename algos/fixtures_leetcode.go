@@ -21,6 +21,17 @@ func GetFixturesBinSearchLeetCode702(idx int) *FixtureConfig {
 	}
 }
 
+func GetFixtureAlgo3(idx int) (string, int, bool) {
+	switch idx {
+	default:
+		return "abcabcbb", 3, false
+	case 0:
+		return "bbbbb", 1, true
+	case 1:
+		return "pwwkew", 3, true
+	}
+}
+
 func GetFixturesAlgo5(idx int) *StringFixture {
 	switch idx {
 	default:
@@ -218,6 +229,32 @@ func GetFixturesAlgo88(idx int) PaarFixture {
 			Expected: []int{2, 4, 5, 5, 6, 8},
 			M:        3,
 			N:        3,
+		}
+	}
+}
+
+func GetFixtureAlgo2(idx int) PaarFixture {
+	switch idx {
+	default:
+		return PaarFixture{
+			Ok:       false,
+			Left:     []int{2, 4, 3},
+			Right:    []int{5, 6, 4},
+			Expected: []int{7, 0, 8},
+		}
+	case 0:
+		return PaarFixture{
+			Ok:       true,
+			Left:     []int{0},
+			Right:    []int{0},
+			Expected: []int{0},
+		}
+	case 1:
+		return PaarFixture{
+			Ok:       true,
+			Left:     []int{9, 9, 9, 9, 9, 9, 9},
+			Right:    []int{9, 9, 9, 9},
+			Expected: []int{8, 9, 9, 9, 0, 0, 0, 1},
 		}
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_101"
 	"github.com/kallaurru/interview/algos/leetcode/algo_125"
 	"github.com/kallaurru/interview/algos/leetcode/algo_1446"
+	"github.com/kallaurru/interview/algos/leetcode/algo_2"
 	"github.com/kallaurru/interview/algos/leetcode/algo_206"
 	"github.com/kallaurru/interview/algos/leetcode/algo_21"
 	"github.com/kallaurru/interview/algos/leetcode/algo_228"
@@ -14,6 +15,7 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_26"
 	"github.com/kallaurru/interview/algos/leetcode/algo_268"
 	"github.com/kallaurru/interview/algos/leetcode/algo_283"
+	"github.com/kallaurru/interview/algos/leetcode/algo_3"
 	"github.com/kallaurru/interview/algos/leetcode/algo_350"
 	"github.com/kallaurru/interview/algos/leetcode/algo_387"
 	"github.com/kallaurru/interview/algos/leetcode/algo_392"
@@ -350,6 +352,43 @@ func TestLeetCodeProblem387(t *testing.T) {
 		in, expect, ok := GetFixtureAlgo387(idx)
 		actual := algo_387.FirstUniqueChrAlgo387(in)
 		assert.Equal(t, expect, actual, "values not equal")
+
+		if !ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem2(t *testing.T) {
+	idx := 0
+begin:
+	for {
+		data := GetFixtureAlgo2(idx)
+		l := algo_2.BuildList(data.Left)
+		r := algo_2.BuildList(data.Right)
+		actual := algo_2.AddTwoNumbers(l, r)
+		for idxR, val := range data.Expected {
+			if actual == nil {
+				t.Error("node is nil")
+				break begin
+			}
+			assert.Equal(t, val, actual.Val, "values not equal. Idx - ", idxR)
+			actual = actual.Next
+		}
+		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem3(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo3(idx)
+		actual := algo_3.LongestSubstring(in)
+		assert.Equal(t, expect, actual, fmt.Sprintf("values not equal. Idx- %d", idx))
 
 		if !ok {
 			break

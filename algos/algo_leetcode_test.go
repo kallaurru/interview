@@ -6,9 +6,12 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_101"
 	"github.com/kallaurru/interview/algos/leetcode/algo_125"
 	"github.com/kallaurru/interview/algos/leetcode/algo_1446"
+	"github.com/kallaurru/interview/algos/leetcode/algo_19"
 	"github.com/kallaurru/interview/algos/leetcode/algo_2"
+	"github.com/kallaurru/interview/algos/leetcode/algo_20"
 	"github.com/kallaurru/interview/algos/leetcode/algo_206"
 	"github.com/kallaurru/interview/algos/leetcode/algo_21"
+	"github.com/kallaurru/interview/algos/leetcode/algo_22"
 	"github.com/kallaurru/interview/algos/leetcode/algo_228"
 	"github.com/kallaurru/interview/algos/leetcode/algo_232"
 	"github.com/kallaurru/interview/algos/leetcode/algo_234"
@@ -393,6 +396,61 @@ func TestLeetCodeProblem3(t *testing.T) {
 		if !ok {
 			break
 		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem19(t *testing.T) {
+	idx := 0
+	for {
+		data := GetFixtureAlgo19(idx)
+		l := algo_19.BuildList(data.Left)
+		actual := algo_19.RemoveNthFromEndAlgo19(l, data.N)
+		for _, val := range data.Expected {
+			if actual == nil && len(data.Expected) > 0 {
+				t.Error("list is end")
+				break
+			}
+			if actual == nil {
+				break
+			}
+			assert.Equal(t, val, actual.Val, "values not equal")
+			actual = actual.Next
+		}
+
+		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem20(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo20(idx)
+		actual := algo_20.IsValidAlgo20(in)
+		assert.Equal(t, expect, actual, "values is not equal")
+
+		if !ok {
+			break
+		}
+
+		idx++
+	}
+}
+
+func TestLeetCodeProblem22(t *testing.T) {
+	idx := 0
+	for {
+		in, expect, ok := GetFixtureAlgo22(idx)
+		actual := algo_22.GenerateParenthesisAlgo22(in)
+		assert.Equal(t, expect, actual, "values is not equal")
+
+		if !ok {
+			break
+		}
+
 		idx++
 	}
 }

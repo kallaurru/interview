@@ -15,9 +15,9 @@ func MaxPalindromeAlgo5(in string) string {
 	}
 	for i := 0; i < len(source); i++ {
 		if i+1 < len(source) && source[i] == source[i+1] {
-			l, r = evenPolyndrome(i, source)
+			l, r = evenPalindrome(i, source)
 		} else {
-			l, r = oddPolyndrome(i, source)
+			l, r = oddPalindrome(i, source)
 		}
 		if r-l+1 > maxL {
 			start = l
@@ -33,7 +33,7 @@ func MaxPalindromeAlgo5(in string) string {
 }
 
 // запускаем если in[idx]==in[idx+1]. Проверка должна быть выше
-func evenPolyndrome(idx int, in []byte) (int, int) {
+func evenPalindrome(idx int, in []byte) (int, int) {
 	// минимальный четный полиндром вначале
 	if idx == 0 && len(in) > 1 && in[idx] == in[idx+1] {
 		return 0, 1
@@ -50,7 +50,7 @@ func evenPolyndrome(idx int, in []byte) (int, int) {
 	return idx - length + 1, idx + length
 }
 
-func oddPolyndrome(idx int, in []byte) (int, int) {
+func oddPalindrome(idx int, in []byte) (int, int) {
 	if idx == 0 {
 		return 0, 0
 	}

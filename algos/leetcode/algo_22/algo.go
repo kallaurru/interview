@@ -5,93 +5,70 @@ func GenerateParenthesisAlgo22(n int) []string {
 	itemR := []byte{')'}
 	itemFull := []byte{'(', ')'}
 
-	// once object
-	genUC1 := func(n int) string {
-		useCase := make([]byte, 0, n*2)
-		for i := 0; i < n; i++ {
-			useCase = append(useCase, itemFull...)
-		}
+	out := make([]string, 0, n*2-1)
 
-		return string(useCase)
+	extBuilder := func(n int) []byte {
+		items := make([]byte, 0, n*2)
+		for i := 0; i < n; i++ {
+			items = append(items, itemFull...)
+		}
+		return items
 	}
 
-	// deep once object
-	genUC2 := func(n int) string {
-		useCase := make([]byte, 0, n*2)
-		for i := 0; i < n; i++ {
-			useCase = append(useCase, itemL...)
-		}
-		for i := 0; i < n; i++ {
-			useCase = append(useCase, itemR...)
-		}
-
-		return string(useCase)
-	}
-
-	// n >= 2 internal n-1 objects
-	genUC3 := func(n int) string {
+	deepInternalBuilder := func(n int) []byte {
 		if n < 2 {
-			return genUC1(n)
+			return []byte{}
 		}
-		useCase := make([]byte, 0, n*2)
-		useCase = append(useCase, itemL...)
+		items := make([]byte, 0, n*2)
 		for i := 0; i < n-1; i++ {
-			useCase = append(useCase, itemFull...)
+			items = append(items, itemL...)
 		}
-		useCase = append(useCase, itemR...)
+		items = append(items, itemFull...)
+		for i := 0; i < n-1; i++ {
+			items = append(items, itemR...)
+		}
 
-		return string(useCase)
+		return items
 	}
 
-	genUC4 := func(n, k int) []string {
-		out := make([]string, 0, n*2*2)
-
-		ext := n - k - 1
-		introObjects := make([][]byte, 0, k*2)
-		extraObjects := make([][]byte, 0, ext*2)
-
-		// сначала внешние потом внутренние
-		for ext > 0 {
-			introObjects = append(introObjects, itemFull)
-			ext--
+	internalBuilder := func(n int) []byte {
+		items := make([]byte, 0, n*2)
+		items = append(items, itemL...)
+		for i := 0; i < n; i++ {
+			items = append(items, itemFull...)
 		}
-		extraObjects = append(extraObjects, itemL)
-		for k > 0 {
-			extraObjects = append(extraObjects, itemFull)
-			k--
-		}
-		extraObjects = append(extraObjects, itemR)
-		for i := 0; i < 2; i++ {
-			tmp := make([]byte, n*2)
-			for _, val := range introObjects {
-				tmp = append(tmp, val...)
-			}
-			for _, val := range extraObjects {
-				tmp = append(tmp, val...)
-			}
-			out = append(out, string(tmp))
-		}
+		items = append(items, itemR...)
 
-		return out
+		return items
 	}
 
-	out := make([]string, 0, n*2*2)
-	out = append(out, genUC1(n))
+	item := extBuilder(n)
+	out = append(out, string(item))
+
 	if n == 1 {
 		return out
 	}
 
-	out = append(out, genUC2(n))
+	item = deepInternalBuilder(n)
+	out = append(out, string(item))
+
 	if n == 2 {
 		return out
 	}
 
-	out = append(out, genUC3(n))
-	// gen n-k-1 ext objects - k internal obj
-	k := n - 2
-	for k > 0 {
-		out = append(out, genUC4(n, k)...)
-		k--
+	item = internalBuilder(n - 1)
+	out = append(out, string(item))
+	maxInternal := n - 1 - 1
+	for maxInternal > 0 {
+		paar := make([]byte, 0, n*2*2-1)
+		reversePaar := make([]byte, 0, n*2*2-1)
+		paar = append(paar, internalBuilder(maxInternal)...)
+		paar = append(paar, extBuilder(n-1-maxInternal)...)
+		out = append(out, string(paar))
+		reversePaar = append(reversePaar, extBuilder(n-1-maxInternal)...)
+		reversePaar = append(reversePaar, internalBuilder(maxInternal)...)
+		out = append(out, string(reversePaar))
+		maxInternal--
 	}
 
 	return out

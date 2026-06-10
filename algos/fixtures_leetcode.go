@@ -513,6 +513,10 @@ func GetFixtureAlgo22(idx int) (int, []string, bool) {
 	default:
 		return 1, []string{"()"}, false
 	case 0:
-		return 3, []string{"((()))", "(()())", "(())()", "()(())", "()()()"}, true
+		return 3, []string{"()()()", "((()))", "(()())", "(())()", "()(())"}, true
+	case 1:
+		return 4, []string{"()()()()", "(((())))", "(()()())", "(()())()", "()(()())", "(())()()", "()()(())"}, true
+	case 2:
+		return 2, []string{"()()", "(())"}, true
 	}
 }

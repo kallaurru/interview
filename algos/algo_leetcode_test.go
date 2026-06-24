@@ -19,13 +19,17 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_268"
 	"github.com/kallaurru/interview/algos/leetcode/algo_283"
 	"github.com/kallaurru/interview/algos/leetcode/algo_3"
+	"github.com/kallaurru/interview/algos/leetcode/algo_33"
 	"github.com/kallaurru/interview/algos/leetcode/algo_350"
 	"github.com/kallaurru/interview/algos/leetcode/algo_387"
 	"github.com/kallaurru/interview/algos/leetcode/algo_392"
 	"github.com/kallaurru/interview/algos/leetcode/algo_415"
+	"github.com/kallaurru/interview/algos/leetcode/algo_49"
 	"github.com/kallaurru/interview/algos/leetcode/algo_5"
 	"github.com/kallaurru/interview/algos/leetcode/algo_557"
+	"github.com/kallaurru/interview/algos/leetcode/algo_56"
 	"github.com/kallaurru/interview/algos/leetcode/algo_704"
+	"github.com/kallaurru/interview/algos/leetcode/algo_71"
 	"github.com/kallaurru/interview/algos/leetcode/algo_771"
 	"github.com/kallaurru/interview/algos/leetcode/algo_88"
 	"github.com/kallaurru/interview/algos/leetcode/algo_938"
@@ -451,6 +455,90 @@ func TestLeetCodeProblem22(t *testing.T) {
 			break
 		}
 
+		idx++
+	}
+}
+
+func TestLeetCodeProblem33(t *testing.T) {
+	idx := 0
+
+	for {
+		data := GetFixtureAlgo33(idx)
+		actual := algo_33.SearchAlgo33(data.Data, data.K)
+		assert.Equal(t, data.Idx, actual, "values is not equal")
+
+		if !data.Ok {
+			break
+		}
+
+		idx++
+	}
+}
+
+func TestLeetCodeProblem49(t *testing.T) {
+	idx := 0
+	findGr := func(l, start int, stor [][]string) ([]string, int) {
+		if start == 0 && len(stor) == 0 {
+			return []string{""}, 0
+		}
+		if start >= len(stor) {
+			return nil, -1
+		}
+		for i := start; i < len(stor); i++ {
+			if len(stor[i]) == l {
+				return stor[i], i
+			}
+		}
+
+		return nil, -1
+	}
+	for {
+		in, expected, ok := GetFixtureAlgo49(idx)
+		actual := algo_49.GroupAnagramsAlgo49(in)
+
+		for _, gr := range actual {
+			start := 0
+			_, start = findGr(len(gr), start, expected)
+			assert.True(t, start >= 0, "group not found")
+		}
+
+		if !ok {
+			break
+		}
+
+		idx++
+	}
+}
+
+func TestLeetCodeProblem56(t *testing.T) {
+	idx := 0
+
+	for {
+		in, expect, ok := GetFixtureAlgo56(idx)
+		actual := algo_56.MergeIntervalsAlgo56(in)
+		assert.Equal(t, len(expect), len(actual), "len of arrays not equal")
+		for i := 0; i < len(actual); i++ {
+			assert.Equal(t, expect[i], actual[i], "arrays not equal")
+		}
+
+		if !ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem71(t *testing.T) {
+	idx := 0
+
+	for {
+		in, expect, ok := GetFixtureAlgo71(idx)
+		actual := algo_71.SimplifyPathAlgo71(in)
+		assert.Equal(t, expect, actual, "values not equal")
+
+		if !ok {
+			break
+		}
 		idx++
 	}
 }

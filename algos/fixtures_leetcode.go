@@ -520,3 +520,66 @@ func GetFixtureAlgo22(idx int) (int, []string, bool) {
 		return 2, []string{"()()", "(())"}, true
 	}
 }
+
+func GetFixtureAlgo33(idx int) FixtureConfig {
+	switch idx {
+	default:
+		return FixtureConfig{
+			Data: []int{4, 5, 6, 7, 0, 1, 2},
+			K:    0,
+			Idx:  4,
+			Ok:   false,
+		}
+	case 0:
+		return FixtureConfig{
+			Data: []int{4, 5, 6, 7, 0, 1, 2},
+			K:    3,
+			Idx:  -1,
+			Ok:   true,
+		}
+	case 1:
+		return FixtureConfig{
+			Data: []int{1},
+			K:    0,
+			Idx:  -1,
+			Ok:   true,
+		}
+	}
+}
+
+func GetFixtureAlgo49(idx int) ([]string, [][]string, bool) {
+	switch idx {
+	default:
+		return []string{"eat", "tea", "tan", "ate", "nat", "bat"}, [][]string{{"bat"}, {"nat", "tan"}, {"ate", "eat", "tea"}}, false
+	case 0:
+		return []string{""}, [][]string{{""}}, true
+	case 1:
+		return []string{"a"}, [][]string{{"a"}}, true
+	}
+}
+
+func GetFixtureAlgo56(idx int) ([][]int, [][]int, bool) {
+	switch idx {
+	default:
+		return [][]int{{1, 3}, {2, 6}, {8, 10}, {15, 18}}, [][]int{{1, 6}, {8, 10}, {15, 18}}, false
+	case 0:
+		return [][]int{{1, 4}, {4, 5}}, [][]int{{1, 5}}, true
+	case 1:
+		return [][]int{{4, 7}, {1, 4}}, [][]int{{1, 7}}, true
+	}
+}
+
+func GetFixtureAlgo71(idx int) (string, string, bool) {
+	switch idx {
+	default:
+		return "/home/", "/home", false
+	case 0:
+		return "/home//foo/", "/home/foo", true
+	case 1:
+		return "/home/user/Documents/../Pictures", "/home/user/Pictures", true
+	case 2:
+		return "/../", "/", true
+	case 3:
+		return "/.../a/../b/c/../d/./", "/.../b/d", true
+	}
+}

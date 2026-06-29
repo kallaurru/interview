@@ -34,6 +34,7 @@ import (
 	"github.com/kallaurru/interview/algos/leetcode/algo_88"
 	"github.com/kallaurru/interview/algos/leetcode/algo_938"
 	"github.com/kallaurru/interview/algos/leetcode/algo_977"
+	"github.com/kallaurru/interview/algos/leetcode/algo_98"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -541,4 +542,23 @@ func TestLeetCodeProblem71(t *testing.T) {
 		}
 		idx++
 	}
+}
+
+func TestLeetCodeProblem98(t *testing.T) {
+	idx := 0
+	for {
+		data := GetFixtureAlgo98(idx)
+		tree := algo_98.BuildTree(data.Raw, data.MV)
+		actual := algo_98.IsValidBSTAlgo98(tree)
+		assert.Equal(t, data.ExpectBool, actual, "values is not equal")
+
+		if !data.Ok {
+			break
+		}
+		idx++
+	}
+}
+
+func TestLeetCodeProblem146(t *testing.T) {
+
 }

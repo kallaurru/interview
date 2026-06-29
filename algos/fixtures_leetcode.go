@@ -583,3 +583,23 @@ func GetFixtureAlgo71(idx int) (string, string, bool) {
 		return "/.../a/../b/c/../d/./", "/.../b/d", true
 	}
 }
+
+func GetFixtureAlgo98(idx int) TreeFixture {
+	mv := -255 // ! контролируй входные данные в Raw
+	switch idx {
+	default:
+		return TreeFixture{
+			Ok:         false,
+			Raw:        []int{2, 1, 3},
+			MV:         mv,
+			ExpectBool: true,
+		}
+	case 0:
+		return TreeFixture{
+			Ok:         true,
+			Raw:        []int{5, 1, 4, mv, mv, 3, 6},
+			MV:         mv,
+			ExpectBool: false,
+		}
+	}
+}

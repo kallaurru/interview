@@ -31,10 +31,20 @@ type PaarFixture struct {
 }
 
 type TreeFixture struct {
+	Ok         bool
+	Raw        []int
+	L          int
+	H          int
+	Expect     int
+	ExpectBool bool
+	MV         int
+}
+
+type CacheFixtureInt struct {
 	Ok     bool
-	Raw    []int
-	L      int
-	H      int
+	Cmd    string
+	Key    int
+	Val    int
 	Expect int
-	MV     int
+	SetId  int
 }

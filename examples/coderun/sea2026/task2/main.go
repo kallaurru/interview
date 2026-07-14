@@ -23,45 +23,6 @@ const (
 	constDefBufSize  = 1 << 20
 )
 
-func maintest() {
-	sortList := make([]uint32, 0, constDefStorSize)
-	orderingDummy(&sortList)
-	fmt.Println(len(sortList))
-
-}
-func mainold() {
-	idx := 0
-	readerIn := bufio.NewReaderSize(getTestReader(idx), constDefBufSize)
-	// читаем количество протоколов
-	part, err := readerIn.ReadSlice('\n')
-	if err != nil {
-		os.Exit(1)
-	}
-
-	count := parseInt(part)
-	for i := 0; i < count; i++ {
-		part, err = readerIn.ReadSlice('\n')
-		if err != nil {
-			os.Exit(1)
-		}
-		countLines := parseInt(part)
-		for l := 0; l < countLines; l++ {
-			part, err = readerIn.ReadSlice('\n')
-			if err == nil || (err != nil && err == io.EOF) {
-				unit, result, ok := converter(part)
-				if ok {
-					//
-					fmt.Printf("UnitID - %d Result - %d\n", unit, result)
-				}
-			}
-			if err != nil {
-				os.Exit(1)
-			}
-		}
-	}
-	os.Exit(0)
-}
-
 func main() {
 	idx := 1
 	readerIn := bufio.NewReaderSize(getTestReader(idx), constDefBufSize)
@@ -71,7 +32,7 @@ func main() {
 	}()
 	orderList := make([]uint32, 0, constDefStorSize)
 	score := make(map[uint32]uint32, constDefStorSize)
-	protoStream, _, ok := reader(readerIn)
+	protoStream, ok := reader(readerIn)
 	wg := sync.WaitGroup{}
 	if !ok {
 		return
@@ -95,30 +56,33 @@ func main() {
 	final(wr, score, orderList)
 }
 
-func reader(r *bufio.Reader) (<-chan Proto, int, bool) {
+func reader(r *bufio.Reader) (<-chan Proto, bool) {
 	chOut := make(chan Proto, 64)
 	// читаем количество протоколов
-	part, err := r.ReadSlice('\n')
+	tmp, err := r.ReadSlice('\n')
 	if err != nil {
 		close(chOut)
-		return chOut, 0, false
+		return chOut, false
 	}
-	count := parseInt(part)
-
+	count := parseInt(tmp)
+	if count == 0 {
+		close(chOut)
+		return chOut, false
+	}
 	go func(r *bufio.Reader, count int) {
 		defer close(chOut)
 
 		for i := 0; i < count; i++ {
-			part, err = r.ReadSlice('\n')
+			tmp, err = r.ReadSlice('\n')
 			if err != nil {
 				return
 			}
 
-			countLines := parseInt(part)
+			countLines := parseInt(tmp)
 			for l := 0; l < countLines; l++ {
-				part, err = r.ReadSlice('\n')
+				tmp, err = r.ReadSlice('\n')
 				if err == nil || (err != nil && err == io.EOF) {
-					unit, result, ok := converter(part)
+					unit, result, ok := converter(tmp)
 					if ok {
 						//
 						chOut <- Proto{
@@ -135,7 +99,7 @@ func reader(r *bufio.Reader) (<-chan Proto, int, bool) {
 		}
 	}(r, count)
 
-	return chOut, 0, true
+	return chOut, true
 }
 
 func converter(in []byte) (uint32, uint32, bool) {
@@ -215,32 +179,84 @@ func parseInt(b []byte) int {
 	return n
 }
 
-// todo dummy
 func sort(orderList []uint32, values []uint32) []uint32 {
-	orderList = append(orderList, values...)
+	if len(orderList) == 0 {
+		orderList = append(orderList, values...)
+		return orderList
+	}
+	start := findL(orderList, values[0])
+	end := findR(orderList, values[len(values)-1])
 
-	return orderList
+	return mergeArrays(orderList, values, start, end)
 }
 
-func orderingDummy(in *[]uint32) {
-	stor := [][]uint32{{1, 3, 5}, {2, 3, 4, 6}, {6, 14, 17}}
-	exists := make(map[uint32]struct{}, 10)
-	local := *in
-	part := make([]uint32, 0, 12)
-
-	for _, series := range stor {
-		for _, item := range series {
-			_, ok := exists[item]
-			if ok {
-				continue
-			}
-			part = append(part, item)
-			exists[item] = struct{}{}
+// Left: первый индекс, где in[i] >= target
+func findL(in []uint32, target uint32) int {
+	l, r := 0, len(in)
+	for l < r {
+		mid := l + (r-l)/2
+		if in[mid] < target {
+			l = mid + 1
+		} else {
+			r = mid
 		}
-		if len(part) > 0 {
-			local = sort(local, part)
-		}
-		part = make([]uint32, 0, 12)
 	}
-	*in = local
+	return l
+}
+
+// Right: первый индекс, где in[i] > target
+func findR(in []uint32, target uint32) int {
+	l, r := 0, len(in)
+	for l < r {
+		mid := l + (r-l)/2
+		if in[mid] <= target {
+			l = mid + 1
+		} else {
+			r = mid
+		}
+	}
+	return l
+}
+
+func mergeArrays(l, r []uint32, start, end int) []uint32 {
+	mid := mergeSubArrays(l, r, start, end)
+	left := l[:start]
+	right := l[end:]
+	out := make([]uint32, 0, len(left)+len(mid)+len(right))
+	out = append(out, left...)
+	out = append(out, mid...)
+	out = append(out, right...)
+
+	return out
+}
+
+func mergeSubArrays(l, r []uint32, start, end int) []uint32 {
+	tmp := l[start:end]
+	out := make([]uint32, len(tmp)+len(r))
+	ptr1, ptr2 := len(tmp)-1, len(r)-1
+	for i := len(out) - 1; i >= 0; i-- {
+		if ptr1 < 0 && ptr2 >= 0 {
+			out[i] = r[ptr2]
+			ptr2--
+			continue
+		}
+
+		if ptr2 < 0 && ptr1 >= 0 {
+			out[i] = tmp[ptr1]
+			ptr1--
+			continue
+		}
+		if tmp[ptr1] > r[ptr2] {
+			out[i] = tmp[ptr1]
+			if ptr1 >= 0 {
+				ptr1--
+			}
+			continue
+		}
+		out[i] = r[ptr2]
+		if ptr2 >= 0 {
+			ptr2--
+		}
+	}
+	return out
 }

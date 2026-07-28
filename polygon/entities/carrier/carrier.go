@@ -59,6 +59,7 @@ func NewCarr(keyIdx int, headers []string, d ...byte) Carrier {
 	return carri
 }
 
+// AddLine - добавляем данные в виде данных колонок. Массив колонок должен формироваться одинаково для каждой строки
 func (c *Carrier) AddLine(val []string) {
 	data := packLine(val, c.delim)
 	res := append(c.body, data...)

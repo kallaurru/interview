@@ -3,6 +3,7 @@ package polygon
 import (
 	"fmt"
 	"github.com/kallaurru/interview/algos/leetcode/algo_232"
+	"github.com/kallaurru/interview/polygon/entities/carrier"
 	"github.com/kallaurru/interview/polygon/sort"
 	"github.com/stretchr/testify/assert"
 	"log"
@@ -85,4 +86,40 @@ func TestQuickSort(t *testing.T) {
 	fmt.Println("Before:", arr)
 	sorted := sort.QuickSort(arr)
 	fmt.Println("After:", sorted)
+}
+
+func TestCarrier(t *testing.T) {
+	headers := []string{"ticker", "value", "source", "moment", "idx"}
+
+	lines := [][]string{
+		{"BTC/USDT", "65000.00", "Bitget", "10:00", "0"},
+		{"ETH/USDT", "1498.00", "Bybit", "11:15", "1"},
+		{"MNT/USDT", "0.46431", "Bybit", "14:15", "2"}}
+
+	carri := carrier.NewCarr(4, headers)
+	for _, part := range lines {
+		carri.AddLine(part)
+	}
+
+	expectedLines := len(lines) + 1 // заголовки в наличии
+	assert.Equal(t, expectedLines, carri.Lines(), "count of lines not equal")
+	assert.True(t, carri.Len() > 0, "len of carrier is zero")
+
+	fmt.Printf("Len -%d, Lines - %d\n", carri.Len(), carri.Lines())
+	data := carri.Parse()
+	for i := 0; i < carri.Lines(); i++ {
+		item, ok := data[i]
+		if !ok {
+			continue
+		}
+		fmt.Printf("Begin line idx %d ----------- \n", i)
+		for idx, val := range item {
+			if idx == carri.KeyF() {
+				fmt.Printf("Idx F - %d | Is Index - Yes | Val - %s\n", idx, string(val))
+			} else {
+				fmt.Printf("Idx F - %d | Is Index - No | Val - %s\n", idx, string(val))
+			}
+		}
+		fmt.Printf("End of Line ----------- \n\n")
+	}
 }

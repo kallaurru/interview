@@ -43,5 +43,5 @@ func main() {
 	avgRps, peakRps, storBytesByDay := p1.CalculatorBofE(dau, r, k, b)
 	fmt.Println("avg_rps=", avgRps)
 	fmt.Println("peak_rps=", peakRps)
-	fmt.Println("storage_bytes_per=", storBytesByDay)
+	fmt.Println("storage_bytes_per_day=", storBytesByDay)
 }

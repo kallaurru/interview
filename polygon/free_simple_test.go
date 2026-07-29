@@ -88,7 +88,7 @@ func TestQuickSort(t *testing.T) {
 	fmt.Println("After:", sorted)
 }
 
-func TestCarrier(t *testing.T) {
+func TestCarrierSync(t *testing.T) {
 	headers := []string{"ticker", "value", "source", "moment", "idx"}
 
 	lines := [][]string{
@@ -121,5 +121,41 @@ func TestCarrier(t *testing.T) {
 			}
 		}
 		fmt.Printf("End of Line ----------- \n\n")
+	}
+}
+
+func TestCarrierUnmarshall(t *testing.T) {
+	headers := []string{"ticker", "value", "source", "moment", "idx"}
+
+	lines := [][]string{
+		{"BTC/USDT", "65000.00", "Bitget", "10:00", "0"},
+		{"ETH/USDT", "1498.00", "Bybit", "11:15", "1"},
+		{"MNT/USDT", "0.46431", "Bybit", "14:15", "2"}}
+
+	carri := carrier.NewCarr(4, headers)
+	for _, part := range lines {
+		carri.AddLine(part)
+	}
+
+	expectedLines := len(lines) + 1 // заголовки в наличии
+	assert.Equal(t, expectedLines, carri.Lines(), "count of lines not equal")
+	assert.True(t, carri.Len() > 0, "len of carrier is zero")
+
+	fmt.Printf("Len -%d, Lines - %d\n", carri.Len(), carri.Lines())
+
+	data := carrier.Unmarshall(carri)
+	lineIdx := 0
+	for lineAsFields := range data {
+		fmt.Printf("Begin line idx %d ----------- \n", lineIdx)
+		for idx, val := range lineAsFields {
+			if idx == carri.KeyF() {
+				fmt.Printf("Idx F - %d | Is Index - Yes | Val - %s\n", idx, string(val))
+			} else {
+				fmt.Printf("Idx F - %d | Is Index - No | Val - %s\n", idx, string(val))
+			}
+		}
+		fmt.Printf("End of Line ----------- \n\n")
+		lineIdx++
+
 	}
 }

@@ -99,19 +99,16 @@ func (c Carrier) Len() int {
 
 func Unmarshall(c Carrier) <-chan [][]byte {
 	out := make(chan [][]byte, constDefChanSize)
-	go func(out chan<- [][]byte, body []byte, count int) {
+	go func(out chan<- [][]byte, carri Carrier) {
 		defer close(out)
 		start := 0
-		for start < len(body) {
-			line, pos := parseLine(body, start)
-			if pos == -1 {
-				return
-			}
-			fields := parseFields(line, count, c.delim)
+		for start < len(carri.body) {
+			line, pos := parseLine(carri.body, start)
+			fields := parseFields(line, carri.Fields(), c.delim)
 			out <- fields
 			start += pos
 		}
-	}(out, c.body, c.Lines())
+	}(out, c)
 
 	return out
 }

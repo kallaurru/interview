@@ -1,0 +1,25 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+
+# Быстрая версия с использованием awk
+awk '
+{
+    total++
+    if ($2 >= 500) status500++
+    count[$1]++
+}
+END {
+    print total
+    print status500+0
+    
+    max_path = ""
+    max_count = 0
+    for (path in count) {
+        if (count[path] > max_count || 
+            (count[path] == max_count && path < max_path)) {
+            max_path = path
+            max_count = count[path]
+        }
+    }
+    print max_path
+}' "${1:-/dev/stdin}"

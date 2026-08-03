@@ -1,0 +1,5 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+awk '$NF == "allocs/op" { print $1, $(NF-1) }' "${1:-/dev/stdin}" \
+  | LC_ALL=C sort -k2,2nr -k1,1 \
+  | head -n 3

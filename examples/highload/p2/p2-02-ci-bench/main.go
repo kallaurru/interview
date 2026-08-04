@@ -6,7 +6,6 @@ import (
 	"os"
 	"sort"
 	"strconv"
-	"strings"
 )
 
 func main() {
@@ -15,58 +14,86 @@ func main() {
 
 	_, err := fmt.Fscan(r, &k, &m)
 	if err != nil {
+		fmt.Printf("Error - %v", err)
 		os.Exit(1)
 	}
 
 	names := make(map[int]string)
-	oldValues := make([]int, m)
-	newValues := make([]int, m)
+	oldResults := make([]int, 0, k)
+	printCache := make([]string, 0, k)
+	flgLim := true
 
 	//загрузили предыдущие значения
 	for i := 0; i < k; i++ {
-		idx := i % k
-		line, _, err := r.ReadLine()
-		if err != nil {
-			fmt.Printf("Ошибка чтения числа #%d: %v\n", i+1, err)
-			os.Exit(2)
-		}
-		fields := strings.Fields(string(line))
-		if len(fields) < m+1 {
-			fmt.Printf("Линия должна иметь #%d: полей %v\n", m+1, err)
-			os.Exit(3)
-		}
-		names[idx] = fields[0]
-		for mm := 1; mm <= m; mm++ {
-			val, err := strconv.Atoi(fields[mm])
+		// разбираем линию на запчасти
+		var item string
+		values := make([]int, 0, m)
+		for ll := 0; ll <= m; ll++ {
+			_, err = fmt.Fscan(r, &item)
 			if err != nil {
-				fmt.Printf("Ошибка чтения числа #%d: %v\n", i+1, err)
+				fmt.Printf("Ошибка чтения числа #%d: %v\n", ll+1, err)
+				os.Exit(2)
+			}
+			if ll == 0 {
+				names[i] = item
+				continue
+			}
+			val, err := strconv.Atoi(item)
+			if err != nil {
+				fmt.Printf("Ошибка чтения числа #%s idx - %d: %v\n", item, ll, err)
 				os.Exit(3)
 			}
-			oldValues[mm-1] = val
+			values = append(values, val)
 		}
+		sort.Ints(values)
+		idxMed := m / 2
+		oldResults = append(oldResults, values[idxMed])
 	}
-	sort.Ints(oldValues)
 
 	// загружаем новые
 	for i := k; i < k*2; i++ {
-		line, _, err := r.ReadLine()
-		if err != nil {
-			fmt.Printf("Ошибка чтения числа #%d: %v\n", i+1, err)
-			os.Exit(2)
-		}
-		fields := strings.Fields(string(line))
-		if len(fields) < m+1 {
-			fmt.Printf("Линия должна иметь #%d: полей %v\n", m+1, err)
-			os.Exit(3)
-		}
-		for mm := 1; mm <= m; mm++ {
-			val, err := strconv.Atoi(fields[mm])
+		// разбираем линию на запчасти
+		var item string
+		values := make([]int, 0, m)
+		for ll := 0; ll <= m; ll++ {
+			_, err = fmt.Fscan(r, &item)
 			if err != nil {
-				fmt.Printf("Ошибка чтения числа #%d: %v\n", i+1, err)
+				fmt.Printf("Ошибка чтения числа #%d: %v\n", ll+1, err)
+				os.Exit(2)
+			}
+			if ll == 0 {
+				continue
+			}
+			val, err := strconv.Atoi(item)
+			if err != nil {
+				fmt.Printf("Ошибка чтения числа #%s idx - %d: %v\n", item, ll, err)
 				os.Exit(3)
 			}
-			newValues[mm-1] = val
+			values = append(values, val)
+		}
+		sort.Ints(values)
+		idxMed := m / 2
+		thIdx := i % k
+		newMed := values[idxMed]
+		oldMed := oldResults[thIdx]
+		delta := float64(newMed-oldMed) / float64(oldMed) * 100
+		if delta > 5 {
+			flgLim = false
+		}
+		name, ok := names[thIdx]
+		if ok {
+			printCache = append(printCache, fmt.Sprintf("%s %+.1f%%", name, delta))
+		} else {
+			fmt.Printf("По индексу %d имя не найдено\n", thIdx)
 		}
 	}
-	sort.Ints(newValues)
+
+	for _, line := range printCache {
+		fmt.Printf("%s\n", line)
+	}
+	if flgLim {
+		fmt.Printf("%s\n", "OK")
+	} else {
+		fmt.Printf("%s\n", "FAIL")
+	}
 }

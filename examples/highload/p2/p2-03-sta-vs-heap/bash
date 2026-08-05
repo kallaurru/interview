@@ -1,0 +1,7 @@
+#!/bin/bash
+export LC_ALL=C
+grep -F 'escapes to heap' "${1:-/dev/stdin}" \
+  | cut -d: -f1 \
+  | sort | uniq -c \
+  | sort -k1,1nr -k2,2 \
+  | awk '{print $2, $1}'

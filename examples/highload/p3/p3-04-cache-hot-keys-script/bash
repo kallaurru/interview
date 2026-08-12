@@ -1,0 +1,4 @@
+#!/bin/bash
+LC_ALL=C
+awk '{ c[$2]++; n++ } END { for (k in c) printf "%s %d %.1f\n", k, c[k], c[k]*100/n }' "${1:-/dev/stdin}" \
+  | LC_ALL=C sort -k2,2nr -k1,1| head -n 3

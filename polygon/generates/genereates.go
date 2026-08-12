@@ -36,6 +36,7 @@ func GenerateReqID(uuid uint16) ([]byte, bool) {
 	if part < 0 && part > 24 {
 		part = 0
 	}
+
 	if part < 10 {
 		buf.Write([]byte{digits[0], digits[part]})
 	} else if part < 20 {

@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/kallaurru/interview/algos/leetcode/algo_232"
 	"github.com/kallaurru/interview/polygon/entities/carrier"
+	"github.com/kallaurru/interview/polygon/generates"
 	"github.com/kallaurru/interview/polygon/sort"
 	"github.com/stretchr/testify/assert"
 	"log"
+	"os"
 	"testing"
 )
 
@@ -158,4 +160,19 @@ func TestCarrierUnmarshall(t *testing.T) {
 		lineIdx++
 
 	}
+}
+
+func TestReqIDGen(t *testing.T) {
+	const uuid uint16 = 0x0808
+
+	reqID, ok := generates.GenerateReqID(uuid)
+	if !ok {
+		os.Exit(2)
+	}
+	str, ok := generates.ParseNiceReqID(reqID)
+	if !ok {
+		os.Exit(3)
+	}
+	fmt.Printf("%s\n", str)
+
 }

@@ -25,15 +25,17 @@ func New(capacity int) *LRUCache {
 	}
 }
 
-func (c *LRUCache) Get(key string) {
+func (c *LRUCache) Get(key string) bool {
 	node, ok := c.router[key]
 	if !ok {
 		c.log(false)
-		return
+		return false
 	}
+	c.stat.L1Hits++
 	c.items.MoveToFront(node)
 	c.log(true)
-	c.stat.L1Hits++
+
+	return true
 }
 
 func (c *LRUCache) Set(key string) {
@@ -66,6 +68,7 @@ func (c *LRUCache) evict() {
 		return
 	}
 	delete(c.router, key)
+	c.items.Remove(node)
 }
 
 func (c *LRUCache) log(isHit bool) {
@@ -105,6 +108,7 @@ func main() {
 	cache := New(c)
 	cacheL2 := make(map[string]struct{}, n)
 	stat := Stat{}
+
 	for i := 0; i < n; i++ {
 		// разбираем линию на запчасти
 		var key = ""
@@ -114,10 +118,24 @@ func main() {
 			os.Exit(3)
 		}
 
-		cache.Get(key)
+		ok := cache.Get(key)
+		if ok {
+			continue // в L1 кэше счетчик Hits
+		}
 
+		_, ok = cacheL2[key]
+		if ok {
+			stat.L2Hits++
+			cache.Set(key)
+			continue
+		}
+		// в обоих кэшах пусто
+		stat.DBReads++
+		cache.Set(key)
+		cacheL2[key] = struct{}{}
 	}
+	statL1 := cache.Stat()
 
-	fmt.Printf("db_calls=%d coalesced=%d hits=%d naive_db_calls=%d\n",
-		stat.DBCalls, stat.CoalEsc, stat.Hits, stat.DBCalls+stat.CoalEsc)
+	fmt.Printf("l1_hits=%d l2_hits=%d db_reads=%d\n",
+		statL1.L1Hits, stat.L2Hits, stat.DBReads)
 }

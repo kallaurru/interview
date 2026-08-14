@@ -1,0 +1,7 @@
+#!/bin/bash
+# минута-рекордсмен одним awk: копим счётчики, в END выбираем максимум
+awk '{ c[int($1/60)]++ }
+     END { best = -1
+           for (m in c) { mm = m + 0
+             if (c[m] > best || (c[m] == best && mm < bm)) { best = c[m]; bm = mm } }
+           if (best < 0) print "0 0"; else print bm, best }' "${1:-/dev/stdin}"

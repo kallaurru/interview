@@ -1,0 +1,10 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+awk '{
+  a[$1]++                    # попытки в секунду: ключ — первое поле
+  k = $1 SUBSEP $2           # составной ключ «секунда, req_id»
+  if (!(k in seen)) { seen[k] = 1; u[$1]++ }
+}
+END {
+  for (s in a) print s, a[s], u[s], (a[s] >= u[s]*3 ? "STORM" : "OK")
+}' "${1:-/dev/stdin}" | sort -n -k1,1

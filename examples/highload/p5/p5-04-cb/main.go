@@ -13,6 +13,11 @@ const (
 	stateHalfOpen uint32 = 0x01
 	eventOk              = "OK"
 	eventFail            = "FAIL"
+
+	scenarioDef         = 0x00
+	scenarioChangeState = 0x01
+	scenarioRejected    = 0x02
+	scenarioFinal       = 0x03
 )
 
 type CircuitBreaker struct {
@@ -20,6 +25,7 @@ type CircuitBreaker struct {
 	limK        int // Сколько успешных проб закрывают цепь
 	limT        int // Сколько тиков цепь держится в Open
 	failCounter atomic.Uint32
+	tryCounter  atomic.Uint32
 	openTick    atomic.Uint32 // Момент перехода в состояние open
 	state       atomic.Uint32
 }
@@ -33,53 +39,79 @@ func New(f, k, t int) *CircuitBreaker {
 
 	cb.state.Store(stateClosed)
 	cb.failCounter.Store(0)
+	cb.tryCounter.Store(0)
 	cb.openTick.Store(0)
 
 	return cb
 }
 
 func (cb *CircuitBreaker) Event(id string, tick int) {
-	old, ok := cb.changeState(id)
-	if !ok {
-		cb.print(0, tick, id, 0)
-		return
-	}
-	cb.print(1, tick, id, old)
+	old, scenario := cb.changeState(id, tick)
+	cb.print(scenario, tick, id, old)
 }
 
-func (cb *CircuitBreaker) changeState(eventID string) (uint32, bool) {
+func (cb *CircuitBreaker) changeState(eventID string, tick int) (uint32, int) {
 	oldState := cb.state.Load()
 	switch oldState {
 	case stateOpen:
+		if uint32(tick) <= cb.openTick.Load()+uint32(cb.limT) {
+			return oldState, scenarioRejected
+		}
+		cb.state.Store(stateHalfOpen)
+		oldState = cb.state.Load()
+		fallthrough
+	case stateHalfOpen:
+		if eventID == eventFail {
+			cb.state.Store(stateOpen)
+			cb.tryCounter.Store(0)
+			cb.openTick.Store(uint32(tick))
+
+			return oldState, scenarioChangeState
+		}
+		cb.tryCounter.Add(1)
+		if cb.tryCounter.Load() >= uint32(cb.limK) {
+			cb.state.Store(stateClosed)
+			cb.failCounter.Store(0)
+			cb.tryCounter.Store(0)
+			cb.openTick.Store(0)
+			return oldState, scenarioChangeState
+		}
+		// попытки в рамках лимита open event OK
+		// если зашли из состояния open
+		return oldState, scenarioDef
 	case stateClosed:
 		if eventID == eventOk {
 			cb.clearFC()
-			return oldState, false
+			return oldState, scenarioDef
 		}
 		cb.failCounter.Add(1)
 		if cb.failCounter.Load() >= uint32(cb.limF) {
 			cb.state.Store(stateOpen)
-			return oldState, true
+			cb.openTick.Store(uint32(tick))
+			return oldState, scenarioChangeState
 		}
 
-		return oldState, false
-	case stateHalfOpen:
-
+		return oldState, scenarioDef
 	}
+
+	return oldState, scenarioDef
 }
 
 func (cb CircuitBreaker) PrintFinal() {
-	cb.print(2, 0, "", 0)
+	cb.print(scenarioFinal, 0, "", 0)
 }
 
 func (cb CircuitBreaker) print(scenario int, tick int, eventId string, oldState uint32) {
 	switch scenario {
 	default:
 		fmt.Printf("%d %s %s\n", tick, cb.printState(cb.state.Load()), eventId)
-	case 1:
+	case scenarioChangeState:
 		// меняем состояние
 		fmt.Printf("%d %s %s -> %s\n", tick, cb.printState(oldState), eventId, cb.printState(cb.state.Load()))
-	case 2:
+	case scenarioRejected:
+		// отклонение запросов
+		fmt.Printf("%d %s REJECTED\n", tick, cb.printState(cb.state.Load()))
+	case scenarioFinal:
 		// финальное состояние
 		fmt.Printf("FINAL %s\n", cb.printState(cb.state.Load()))
 	}

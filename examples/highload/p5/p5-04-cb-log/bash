@@ -1,0 +1,40 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+
+export LC_ALL=C   # для алфавитной сортировки в POSIX-порядке
+
+awk '
+BEGIN {
+    first = 0
+    prev_tick = 0
+    prev_state = ""
+    total = 0
+}
+NR == 1 {
+    first = $1
+    prev_tick = $1
+    prev_state = $2
+    next
+}
+$2 == "END" {
+    diff = $1 - prev_tick
+    sum[prev_state] += diff
+    total = $1 - first
+    next
+}
+{
+    diff = $1 - prev_tick
+    sum[prev_state] += diff
+    prev_tick = $1
+    prev_state = $2
+}
+END {
+    # Передаём строки состояний в sort для сортировки
+    sortcmd = "sort -k2,2nr -k1,1"
+    for (s in sum) {
+        print s, sum[s] | sortcmd
+    }
+    close(sortcmd)
+    print "TOTAL", total
+}
+' "${1:-/dev/stdin}"

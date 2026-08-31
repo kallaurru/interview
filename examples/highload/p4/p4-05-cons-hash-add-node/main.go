@@ -9,7 +9,7 @@ import (
 
 type Point struct {
 	Pos   uint32
-	Idx   int
+	Node  int
 	Label string
 	Name  string
 }
@@ -23,7 +23,9 @@ func main() {
 		fmt.Printf("Error - %v", err)
 		os.Exit(1)
 	}
-	points := make([]Point, 0, (k+1)*v)
+	pointsX := make([]Point, 0, k*v)
+	pointsX1 := make([]Point, 0, (k+1)*v)
+	names := make(map[string]struct{}, k)
 
 	for i := 0; i < k; i++ {
 		var name string
@@ -33,7 +35,13 @@ func main() {
 			fmt.Printf("Error - %v", err)
 			os.Exit(2)
 		}
-		points = addNewNode(points, name, v)
+		_, ok := names[name]
+		if ok {
+			continue
+		}
+		pointsX = addNewNode(pointsX, name, v, i)   // i текущий номер ноды
+		pointsX1 = addNewNode(pointsX1, name, v, i) // i текущий номер ноды
+		names[name] = struct{}{}
 	}
 
 	var newNodeName string
@@ -44,12 +52,15 @@ func main() {
 		os.Exit(33)
 	}
 
+	_, ok := names[newNodeName]
+	if !ok {
+		pointsX1 = addNewNode(pointsX1, newNodeName, v, k) // k индекс новой ноды
+	}
 	_, err = fmt.Fscan(r, &m)
 	if err != nil {
 		fmt.Printf("Error - %v", err)
 		os.Exit(33)
 	}
-	oldVersion := make(map[string]Point, m)
 	keys := make([]string, 0, m)
 
 	for i := 0; i < m; i++ {
@@ -62,31 +73,17 @@ func main() {
 		}
 
 		keys = append(keys, key)
-		point := findNode(points, key)
-		oldVersion[key] = point
-	}
-
-	points = addNewNode(points, newNodeName, v)
-	newVersion := make(map[string]Point, m)
-
-	for i := 0; i < len(keys); i++ {
-		point := findNode(points, keys[i])
-		newVersion[keys[i]] = point
 	}
 
 	changed := 0
-	for key, node := range newVersion {
-		oldNode, ok := oldVersion[key]
-		if !ok {
+	for i := 0; i < len(keys); i++ {
+		pointX := findNode(pointsX, keys[i])
+		pointX1 := findNode(pointsX1, keys[i])
+		if pointX.Node != pointX1.Node {
 			changed++
-			continue
 		}
-
-		if oldNode.Name == node.Name {
-			continue
-		}
-		changed++
 	}
+
 	fmt.Printf("%d\n", changed)
 }
 
@@ -109,11 +106,11 @@ func findNode(points []Point, key string) Point {
 	return points[idx]
 }
 
-func addNewNode(points []Point, name string, v int) []Point {
-	for ii := 0; ii < v; ii++ {
-		label := fmt.Sprintf("%s#%d", name, ii)
+func addNewNode(points []Point, name string, v, k int) []Point {
+	for i := 0; i < v; i++ {
+		label := fmt.Sprintf("%s#%d", name, i)
 		p := Point{
-			Idx:   ii,
+			Node:  k,
 			Name:  name,
 			Label: label,
 			Pos:   fnv32a(label),

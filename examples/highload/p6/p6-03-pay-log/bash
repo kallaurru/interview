@@ -1,0 +1,49 @@
+#!/bin/bash
+export LC_ALL=C
+
+awk '
+{
+    # Пропускаем строки, не содержащие "CHARGE"
+    if ($2 != "CHARGE") next
+
+    # Извлекаем ключ (после key= до пробела или конца строки)
+    if (match($0, /key=([^ ]+)/, arr)) key = arr[1]
+    else next
+
+    # Извлекаем сумму (после amount= до пробела или конца строки)
+    if (match($0, /amount=([0-9]+)/, arr)) amount = arr[1]
+    else next
+
+    # Считаем вхождения, суммы и запоминаем первое значение
+    count[key]++
+    total[key] += amount
+    if (count[key] == 1) first[key] = amount
+}
+END {
+    extra_total = 0
+    for (k in count) {
+        if (count[k] > 1) {
+            extra = total[k] - first[k]   # повторные списания
+            extra_total += extra
+            print count[k], k             # строка для сортировки
+        }
+    }
+    # Маркер для передачи общей суммы
+    print "EXTRA_TOTAL=" extra_total
+}
+' | sort -k1,1nr -k2,2 | awk '
+BEGIN { has_dups = 0 }
+/^EXTRA_TOTAL=/ {
+    extra = substr($0, index($0, "=") + 1)
+    next
+}
+{
+    has_dups = 1
+    count = $1
+    key = $2
+    print key, count
+}
+END {
+    if (!has_dups) print "no duplicates"
+    print "extra_charged=" extra
+}' "${1:-/dev/stdin}"

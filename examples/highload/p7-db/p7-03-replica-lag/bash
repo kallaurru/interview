@@ -1,0 +1,66 @@
+#!/bin/bash
+
+awk '
+BEGIN {
+    # Читаем первую строку: lag M
+    if (getline != 1) {
+        exit 1
+    }
+    lag = $1
+    M = $2
+    stale_count = 0
+    ryw_count = 0
+}
+{
+    type = $1
+    t = $2
+    client = $3
+    key = $4
+    src = (NF >= 5 ? $5 : "")
+
+    # Удаляем записи, которые уже стали видны на реплике (tw <= t - lag)
+    limit = t - lag
+    s = start[key]
+    total = total_records[key]
+    while (s < total) {
+        rec = records[key, s]
+        split(rec, arr, ":")
+        tw = arr[1]
+        if (tw <= limit) {
+            cl = arr[2]
+            # Уменьшаем счётчики
+            count_active[key]--
+            client_count[key, cl]--
+            if (client_count[key, cl] == 0) {
+                delete client_count[key, cl]
+            }
+            s++
+        } else {
+            break
+        }
+    }
+    start[key] = s
+
+    # Обработка события
+    if (type == "W") {
+        # Добавляем запись
+        total = total_records[key]
+        records[key, total] = t ":" client
+        total_records[key] = total + 1
+        count_active[key]++
+        client_count[key, client]++
+    } else if (type == "R") {
+        if (src == "replica") {
+            if (count_active[key] > 0) {
+                stale_count++
+                if (client_count[key, client] > 0) {
+                    ryw_count++
+                }
+            }
+        }
+    }
+}
+END {
+    print stale_count, ryw_count
+}
+' "${1:-/dev/stdin}"

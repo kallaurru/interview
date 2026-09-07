@@ -1,0 +1,31 @@
+#!/bin/bash
+
+max_lag=-1
+max_name=""
+
+while read -r name sent replay; do
+    # Пропускаем пустые строки
+    [[ -z "$name" && -z "$sent" && -z "$replay" ]] && continue
+
+    # Разбиваем LSN на H и L
+    sent_H="${sent%/*}"
+    sent_L="${sent#*/}"
+    replay_H="${replay%/*}"
+    replay_L="${replay#*/}"
+
+    # Вычисляем числовые значения LSN через bc (без переполнения)
+    sent_val=$(echo "$((16#$sent_H)) * 4294967296 + $((16#$sent_L))" | bc)
+    replay_val=$(echo "$((16#$replay_H)) * 4294967296 + $((16#$replay_L))" | bc)
+    lag=$(echo "$sent_val - $replay_val" | bc)
+
+    # Сравниваем лаги (если текущий > максимального)
+    if [[ -z "$max_name" ]] || [ "$(echo "$lag > $max_lag" | bc)" -eq 1 ]; then
+        max_lag="$lag"
+        max_name="$name"
+    fi
+done
+
+# Вывод результата, если были данные
+if [[ -n "$max_name" ]]; then
+    echo "$max_name $max_lag"
+fi

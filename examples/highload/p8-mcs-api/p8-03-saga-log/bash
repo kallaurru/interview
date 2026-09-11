@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+export LC_ALL=C
+
+awk '
+$3 == "START"       { total++ }
+$3 == "COMMITTED"   { c++ }
+$3 == "COMPENSATED" { p++ }
+END {
+    printf "COMMITTED %d\nCOMPENSATED %d\nSTUCK %d\n", c+0, p+0, total-c-p
+}
+' "${1:-/dev/stdin}"

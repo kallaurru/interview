@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+export LC_ALL=C
+
+declare -A sum
+
+while read -r from to ms; do
+    [ -z "$from" ] && continue
+    sum["$from->$to"]=$(( ${sum["$from->$to"]:-0} + ms ))
+done < "${1:-/dev/stdin}"
+
+for k in "${!sum[@]}"; do
+    printf '%s %d\n' "$k" "${sum[$k]}"
+done | sort -k2,2nr -k1,1 | head -n 3

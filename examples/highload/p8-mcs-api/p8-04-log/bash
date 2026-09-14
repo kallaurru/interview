@@ -1,0 +1,33 @@
+#!/bin/bash
+
+LC_ALL=C
+awk '
+    length($0) == 0 { next }          # пропускаем пустые строки
+    {
+        count[$0]++
+        total++
+    }
+    END {
+        if (total == 0) {
+            print "0 0 0"
+            print ""
+            exit
+        }
+
+        unique = 0
+        for (id in count) unique++
+        print total, unique, total - unique
+
+        best  = ""
+        bestc = 0
+        for (id in count) {
+            c = count[id]
+            # "id" и "best" принудительно сравниваются как строки,
+            # иначе awk сравнил бы числовые id как числа
+            if (c > bestc || (c == bestc && (id "") < (best ""))) {
+                bestc = c
+                best  = id
+            }
+        }
+        print best, bestc
+    }' "${1:-/dev/stdin}"

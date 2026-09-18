@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -28,9 +30,10 @@ func main() {
 		return
 	}
 	branch := make([]int, 0, (n+1)/2)
-	funout := make([]int, 0, (n+1)/2)
+	fanout := make([]int, 0, (n+1)/2)
 	// Читаем остальные строки (пары ts key)
 	for scanner.Scan() {
+		var fnOutMax int
 		line := scanner.Text()
 		// Строка может быть пустой? По условию — нет, но на всякий случай.
 		if line == "" {
@@ -41,25 +44,43 @@ func main() {
 			fmt.Printf("Skipping invalid line: %q\n", line)
 			continue
 		}
-		ts, err = strconv.ParseInt(parts[0], 10, 64)
+		k, err := strconv.ParseInt(parts[0], 10, 64)
 		if err != nil {
 			fmt.Printf("Invalid ts: %v\n", err)
 			continue
 		}
-		key = parts[1]
-
-		if dd.Once(key, ts) {
-			accepted++
-			fmt.Printf("ACCEPT %s\n", key)
-		} else {
-			duplicated++
-			fmt.Printf("DUPLICATE %s\n", key)
+		if len(parts[1:]) < int(k) {
+			fmt.Printf(": %v\n", err)
+			os.Exit(333)
 		}
-	}
 
-	fmt.Printf("accepted=%d duplicates=%d\n", accepted, duplicated)
-	// Проверяем ошибки сканера (если были)
-	if err = scanner.Err(); err != nil {
-		fmt.Printf("Scanner error: %v\n", err)
+		for i := 1; i <= int(k); i++ {
+			val, err := strconv.Atoi(parts[i])
+			if err != nil {
+				fmt.Printf("Invalid ts: %v\n", err)
+				continue
+			}
+			branch = append(branch, val)
+			if fnOutMax < val {
+				fnOutMax = val
+			}
+		}
+
+		fanout = append(fanout, fnOutMax)
 	}
+	slices.Sort(branch)
+	slices.Sort(fanout)
+	pb50Idx := math.Ceil(float64(50*len(branch)) / float64(100))
+	pb99Idx := math.Ceil(float64(99*len(branch)) / float64(100))
+
+	pf50Idx := math.Ceil(float64(50*len(fanout)) / float64(100))
+	pf99Idx := math.Ceil(float64(99*len(fanout)) / float64(100))
+
+	pb50 := branch[int(pb50Idx)-1]
+	pb99 := branch[int(pb99Idx)-1]
+	pf50 := fanout[int(pf50Idx)-1]
+	pf99 := fanout[int(pf99Idx)-1]
+
+	fmt.Printf("BRANCH %d %d\n", pb50, pb99)
+	fmt.Printf("FANOUT %d %d\n", pf50, pf99)
 }

@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+read -r n
+
+for ((i = 0; i < n; i++)); do
+    read -r service avg_ms target_rps
+
+    # W = ceil(avg_ms * target_rps / 1000)
+    # Для неотрицательных чисел: ceil(x / 1000) = (x + 999) / 1000
+    W=$(( (avg_ms * target_rps + 999) / 1000 ))
+
+    echo "$service $W"
+done

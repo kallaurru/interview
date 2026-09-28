@@ -1,0 +1,22 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+
+# Сохраняем весь stdin один раз
+cat > "$tmp"
+
+# Считаем строки с сообщением о гонке
+race_count=$(grep -c 'WARNING: DATA RACE' "$tmp" || true)
+
+# Извлекаем все места в коде
+places=$(grep -oE '[A-Za-z0-9_./-]+\.go:[0-9]+' "$tmp" || true)
+
+if [ -n "$places" ]; then
+    places=$(printf '%s\n' "$places" | LC_ALL=C sort -u)
+fi
+
+echo "$race_count"
+if [ -n "$places" ]; then
+    echo "$places"
+fi

@@ -1,0 +1,42 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+awk '
+BEGIN { allow = 0; deny = 0 }
+{
+    line = $0
+    sub(/^[[:space:]]+/, "", line)
+
+    # пропускаем пустые строки и комментарии
+    if (line == "" || line ~ /^#/) next
+
+    # интересует только метрика с точным именем и открывающей {
+    prefix = "ratelimiter_requests_total{"
+    if (index(line, prefix) != 1) next
+
+    rest = substr(line, length(prefix) + 1)
+    pos = index(rest, "}")
+    if (pos == 0) next
+
+    labels = substr(rest, 1, pos - 1)
+    tail = substr(rest, pos + 1)
+
+    # берём первое целое число после закрывающей }
+    if (match(tail, /[0-9]+/)) {
+        value = substr(tail, RSTART, RLENGTH) + 0
+    } else {
+        next
+    }
+
+    # ищем ровно decision="allow" или decision="deny" среди лейблов
+    if (labels ~ /(^|,)[[:space:]]*decision="allow"[[:space:]]*(,|$)/) {
+        allow += value
+    } else if (labels ~ /(^|,)[[:space:]]*decision="deny"[[:space:]]*(,|$)/) {
+        deny += value
+    }
+}
+END {
+    total = allow + deny
+    printf "allow %d\n", allow
+    printf "deny %d\n", deny
+    printf "deny_pct %d\n", int(deny * 100 / total)
+}' "${1:-/dev/stdin}"

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# читайте stdin, пишите ответ в stdout
+tmp_lat=$(mktemp)
+tmp_path=$(mktemp)
+trap 'rm -f "$tmp_lat" "$tmp_path"' EXIT
+
+# Извлекаем латентности (4-е поле) и пути (2-е поле)
+awk -v lat="$tmp_lat" -v path="$tmp_path" '{
+    print $4 > lat
+    print $2 > path
+}'
+
+N=$(wc -l < "$tmp_lat")
+if [ "$N" -eq 0 ]; then
+    echo "p95=0"
+    exit 0
+fi
+
+# nearest-rank: idx = (95*N + 99) // 100
+idx=$(( (95 * N + 99) / 100 ))
+p95=$(sort -n "$tmp_lat" | sed -n "${idx}p")
+echo "p95=$p95"
+
+# Топ-3 пути: сортировка по убыванию count, при равенстве — по возрастанию path
+sort "$tmp_path" | uniq -c | sort -k1,1nr -k2,2 | head -n 3 | awk '{print $2, $1}'

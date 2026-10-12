@@ -1,0 +1,38 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+awk '
+BEGIN {
+    cpu_sum = 0
+    mem_sum = 0
+    max_mem = -1
+    max_name = ""
+}
+{
+    # пропускаем заголовок
+    if ($1 == "NAME") next
+    # меньше трёх полей — игнорируем
+    if (NF < 3) next
+
+    name = $1
+    cpu  = $2
+    mem  = $3
+
+    # ожидаем суффиксы m и Mi
+    if (cpu !~ /m$/) next
+    if (mem !~ /Mi$/) next
+
+    cpu_val = substr(cpu, 1, length(cpu) - 1) + 0
+    mem_val = substr(mem, 1, length(mem) - 2) + 0
+
+    cpu_sum += cpu_val
+    mem_sum += mem_val
+
+    # первый под с максимальной памятью (строго больше)
+    if (mem_val > max_mem) {
+        max_mem = mem_val
+        max_name = name
+    }
+}
+END {
+    printf "cpu=%dm mem=%dMi max=%s\n", cpu_sum, mem_sum, max_name
+}' "${1:-/dev/stdin}"

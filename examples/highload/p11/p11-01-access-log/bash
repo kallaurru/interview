@@ -1,0 +1,26 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+# Read all input into a temporary file to allow multiple passes
+tmpfile=$(mktemp)
+cat > "$tmpfile"
+
+# Total number of lines (N)
+N=$(wc -l < "$tmpfile")
+
+# --- p95 latency ---
+# idx = ceil(0.95 * N) = (95 * N + 99) // 100
+idx=$(( (95 * N + 99) / 100 ))
+p95=$(awk '{print $5}' "$tmpfile" | sort -n | sed -n "${idx}p")
+echo "p95=$p95"
+
+# --- peak_rps ---
+# Maximum number of requests in the same ts
+peak_rps=$(awk '{print $1}' "$tmpfile" | sort | uniq -c | sort -nr | head -1 | awk '{print $1}')
+echo "peak_rps=$peak_rps"
+
+# --- top 3 paths ---
+# Sort by count descending, then path lexicographically ascending
+awk '{print $3}' "$tmpfile" | sort | uniq -c | sort -k1,1nr -k2,2 | head -3 | awk '{print $1, $2}'
+
+# Cleanup
+rm "$tmpfile"

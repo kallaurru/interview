@@ -1,0 +1,49 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+export LC_ALL=C
+
+tmp=$(mktemp)
+clean=$(mktemp)
+trap 'rm -f "$tmp" "$clean"' EXIT
+
+# Read all input lines, validate
+while IFS= read -r line || [ -n "$line" ]; do
+    # shellcheck disable=SC2086
+    set -- $line
+    if [ $# -ne 4 ]; then
+        continue
+    fi
+    method=$1
+    path=$2
+    status=$3
+    latency=$4
+
+    # Validate status and latency are integers
+    case "$status" in
+        ''|*[!0-9-]*) continue ;;
+    esac
+    case "$latency" in
+        ''|*[!0-9-]*) continue ;;
+    esac
+
+    printf '%s %s %s %s\n' "$method" "$path" "$status" "$latency" >> "$clean"
+done
+
+# p95
+n=$(wc -l < "$clean")
+if [ "$n" -eq 0 ]; then
+    echo "p95 0"
+    echo "errors 0"
+    exit 0
+fi
+
+idx=$(( (95 * n + 99) / 100 ))
+p95=$(awk '{print $4}' "$clean" | sort -n | sed -n "${idx}p")
+echo "p95 $p95"
+
+# errors
+errors=$(awk '$3 >= 500' "$clean" | wc -l)
+echo "errors $errors"
+
+# top-3 paths
+awk '{print $2}' "$clean" | sort | uniq -c | sort -k1,1nr -k2,2 | head -3 | awk '{print $1, $2}'

@@ -1,0 +1,25 @@
+#!/bin/bash
+# читайте stdin, пишите ответ в stdout
+export LC_ALL=C
+
+awk '
+  /^#/ { next }
+  /^[[:space:]]*$/ { next }
+  {
+    pos = index($0, "{")
+    if (pos == 0) {
+      pos = index($0, " ")
+    }
+    if (pos == 0) {
+      name = $0
+    } else {
+      name = substr($0, 1, pos - 1)
+    }
+    count[name]++
+  }
+  END {
+    for (name in count) {
+      print count[name], name
+    }
+  }
+' | sort -k1,1nr -k2,2 | head -5
